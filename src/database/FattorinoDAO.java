@@ -1,5 +1,126 @@
 package database;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import entity.EntityFattorino;
+import exception.DAOException;
+import exception.DBConnectionException;
+
 public class FattorinoDAO {
-	//buongiorno pescheria
+
+    public static EntityFattorino readFattorino(int idFattorino) throws DAOException, DBConnectionException {
+        EntityFattorino fattorino = null;
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "SELECT * FROM FATTORINO WHERE IDFATTORINO=?;";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, idFattorino);
+
+                ResultSet result = stmt.executeQuery();
+
+                if (result.next()) {
+                    fattorino = new EntityFattorino(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore lettura fattorino");
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB");
+        }
+
+        return fattorino;
+    }
+
+    public static boolean createFattorino(EntityFattorino fattorino) throws DAOException, DBConnectionException {
+        boolean success = false;
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD) VALUES (?, ?, ? , ? );";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, fattorino.getIdFattorino());
+                stmt.setString(2, fattorino.getNome());
+                stmt.setString(3, fattorino.getUsername());
+                stmt.setString(4, fattorino.getPassword());
+                
+
+                success = stmt.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new DAOException("Errore creazione fattorino");
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB");
+        }
+
+        return success;
+    }
+
+    public static boolean updateFattorino(EntityFattorino fattorino) throws DAOException, DBConnectionException {
+        boolean success = false;
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "UPDATE FATTORINO SET IDFATTORINO=?, NOME=?, USERNAME =?, PASSWORD =?,   WHERE IDFATTORINO=?;"; //IDFATTORINO chiave primaria
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, fattorino.getIdFattorino());
+                stmt.setString(2, fattorino.getNome());
+                stmt.setString(3, fattorino.getUsername());
+                stmt.setString(4, fattorino.getPassword());
+                
+                
+
+                success = stmt.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new DAOException("Errore aggiornamento fattorino");
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB");
+        }
+
+        return success;
+    }
+
+    public static boolean deleteFattorino(int idFattorino) throws DAOException, DBConnectionException {
+        boolean success = false;
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "DELETE FROM FATTORINO WHERE IDFATTORINO=?;";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, idFattorino);
+
+                success = stmt.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new DAOException("Errore eliminazione fattorino");
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB");
+        }
+
+        return success;
+    }
 }
