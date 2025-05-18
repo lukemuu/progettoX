@@ -30,7 +30,7 @@ public class PescheriaDAO {
 
                 if (result.next()) {
                     pescheria = new EntityPescheria(
-                        result.getString("IDPESCHERIA"),
+                        result.getInt("IDPESCHERIA"),
                         result.getString("NOME"),
                         result.getString("INDIRIZZO"),
                         result.getString("EMAIL"),
@@ -65,7 +65,7 @@ public class PescheriaDAO {
 	
 	            while (result.next()) {
 	                EntityPescheria pescheria = new EntityPescheria(
-	                    result.getString("IDPESCHERIA"),
+	                    result.getInt("IDPESCHERIA"),
 	                    result.getString("NOME"),
 	                    result.getString("INDIRIZZO"),
 	                    result.getString("EMAIL"),
@@ -97,7 +97,7 @@ public class PescheriaDAO {
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, pescheria.getIdPescheria());
+                stmt.setInt(1, pescheria.getIdPescheria());
                 stmt.setString(2, pescheria.getNome());
                 stmt.setString(3, pescheria.getIndirizzo());
                 stmt.setString(4, pescheria.getEmail());
@@ -132,7 +132,7 @@ public class PescheriaDAO {
                 stmt.setString(3, pescheria.getEmail());
                 stmt.setString(4, pescheria.getUsername());
                 stmt.setString(5, pescheria.getPassword());
-                stmt.setString(6, pescheria.getIdPescheria());
+                stmt.setInt(6, pescheria.getIdPescheria());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
