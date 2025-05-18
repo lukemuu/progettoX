@@ -21,12 +21,12 @@ public class EntityFattorino {
 	}
 
 
-	public int getIdRistoranteRegistrato() {
+	public int getIdFattorino() {
 		return idFattorino;
 	}
 
 
-	public void setIdRistoranteRegistrato(int idFattorino) {
+	public void setIdFattorino(int idFattorino) {
 		this.idFattorino = idFattorino;
 	}
 
