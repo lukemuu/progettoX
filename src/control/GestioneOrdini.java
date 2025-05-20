@@ -11,6 +11,7 @@ import exception.DBConnectionException;
 
 import java.util.ArrayList;
 import java.util.List;
+import exception.OperationException;
 
 public class GestioneOrdini {
 	
@@ -58,5 +59,39 @@ public class GestioneOrdini {
         } catch (DAOException | DBConnectionException e) {
             System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
         }
+    }
+    public void modificaOrdine(int idOrdine, int quantitaAggiornata) throws OperationException, DAOException, DBConnectionException {
+
+        if (quantitaAggiornata <= 0) {
+            throw new OperationException("La quantità aggiornata deve essere un numero positivo.");
+        }
+
+        // Recupera la lista degli ordini dal database
+        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdini();
+
+        // Cerca l'ordine con l'ID specificato
+        EntityOrdine ordineDaModificare = null;
+        for (EntityOrdine ordine : listaOrdini) {
+            if (ordine.getIdOrdine() == idOrdine) {
+                ordineDaModificare = ordine;
+                break;
+            }
+        }
+
+        if (ordineDaModificare == null) {
+            throw new OperationException("Nessun ordine trovato con l'ID specificato.");
+        }
+
+        // Aggiorna la quantità aggiornata nell'oggetto ordine
+        ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
+
+        // Aggiorna l'ordine nel database
+        boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
+
+        if (!successo) {
+            throw new OperationException("Errore durante l'aggiornamento della quantità dell'ordine.");
+        }
+
+        System.out.println("Quantità aggiornata con successo per l'ordine con ID: " + idOrdine);
     }
 }

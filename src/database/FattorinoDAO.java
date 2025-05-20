@@ -25,7 +25,7 @@ public class FattorinoDAO {
                 ResultSet result = stmt.executeQuery();
 
                 if (result.next()) {
-                    fattorino = new EntityFattorino(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
+                    fattorino = new EntityFattorino(result.getInt("IDFATTORINO"), result.getString("NOME"), result.getString("USERNAME"), result.getString("PASSWORD"));
                 }
             } catch (SQLException e) {
                 throw new DAOException("Errore lettura fattorino");
