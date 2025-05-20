@@ -3,8 +3,11 @@ package control;
 
 import database.OrdineDAO;
 import database.PescheriaDAO;
+import database.FattorinoDAO;
 import entity.EntityOrdine;
 import entity.EntityPescheria;
+import entity.EntityFattorino;
+import boundary.BoundaryCooperativa;
 
 import exception.DAOException;
 import exception.DBConnectionException;
@@ -94,4 +97,42 @@ public class GestioneOrdini {
 
         System.out.println("Quantità aggiornata con successo per l'ordine con ID: " + idOrdine);
     }
+    
+
+    public void assegnaConsegna() throws OperationException, DAOException, DBConnectionException {
+        // Recupera gli ordini e i fattorini
+        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimoGiorno();
+        List<EntityFattorino> listaFattorini = FattorinoDAO.readAllFattorini();
+
+        // Controlla se le liste sono vuote
+        if (listaOrdini.isEmpty()) {
+            throw new OperationException("Nessun ordine disponibile per l'assegnazione.");
+        }
+        if (listaFattorini.isEmpty()) {
+            throw new OperationException("Nessun fattorino disponibile per l'assegnazione.");
+        }
+
+        
+
+        // Richiama la funzione per creare le consegne
+        boolean successo = ConsegnaDAO.creaConsegna();
+        if (!successo) {
+            throw new OperationException("Errore durante l'assegnazione delle consegne.");
+        }
+    }
+    
+    public static void mostraListaOrdini(List<EntityOrdine> listaOrdini) {
+        System.out.println("Lista degli ordini disponibili:");
+        for (EntityOrdine ordine : listaOrdini) {
+            System.out.println("ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
+        }
+    }
+
+    public static void mostraListaFattorini(List<EntityFattorino> listaFattorini) {
+        System.out.println("Lista dei fattorini disponibili:");
+        for (EntityFattorino fattorino : listaFattorini) {
+            System.out.println("ID Fattorino: " + fattorino.getIdFattorino() + ", Nome: " + fattorino.getNome());
+        }
+    }
+
 }

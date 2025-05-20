@@ -9,6 +9,9 @@ import entity.EntityFattorino;
 import exception.DAOException;
 import exception.DBConnectionException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FattorinoDAO {
 
     public static EntityFattorino readFattorino(int idFattorino) throws DAOException, DBConnectionException {
@@ -123,4 +126,34 @@ public class FattorinoDAO {
 
         return success;
     }
+    
+    public static List<EntityFattorino> readAllFattorini() throws DAOException, DBConnectionException {
+        List<EntityFattorino> fattorini = new ArrayList<>();
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "SELECT * FROM FATTORINO;";
+
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet result = stmt.executeQuery()) {
+
+                while (result.next()) {
+                    EntityFattorino fattorino = new EntityFattorino(
+                        result.getInt("IDFATTORINO"),
+                        result.getString("NOME"),
+                        result.getString("USERNAME"),
+                        result.getString("PASSWORD")
+                    );
+                    fattorini.add(fattorino);
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore lettura fattorini: " + e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB: " + e.getMessage(), e);
+        }
+
+        return fattorini;
+    }
+    
 }

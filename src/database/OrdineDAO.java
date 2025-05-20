@@ -208,5 +208,37 @@ public class OrdineDAO {
 	
 	    return ordini;
 	}
+	
+	public static List<EntityOrdine> readOrdiniUltimoGiorno() throws DAOException, DBConnectionException {
+	    List<EntityOrdine> ordini = new ArrayList<>();
 
+	    try {
+	        Connection conn = DBManager.getConnection();
+	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE;";
+
+	        try (PreparedStatement stmt = conn.prepareStatement(query);
+	             ResultSet result = stmt.executeQuery()) {
+
+	            while (result.next()) {
+	                EntityOrdine ordine = new EntityOrdine(
+	                    result.getInt("IDORDINE"),
+	                    result.getInt("IDRISTORANTE"),
+	                    result.getInt("IDPESCHERIA"),
+	                    result.getDate("DATA"),
+	                    result.getInt("IDPRODOTTO"),
+	                    result.getFloat("QTA")
+	                );
+	                ordini.add(ordine);
+	            }
+	        } catch (SQLException e) {
+	        	throw new DAOException("Errore lettura ordini dell'ultimo giorno: " + e.getMessage(), e);
+	        }
+	     
+	    } catch (SQLException e) {
+	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+	    }
+
+	    return ordini;
+	}
 }
+
