@@ -1,7 +1,7 @@
-
 package control;
 
 import database.OrdineDAO;
+import database.ConsegnaDAO;
 import database.PescheriaDAO;
 import database.FattorinoDAO;
 import entity.EntityOrdine;
@@ -15,6 +15,7 @@ import exception.DBConnectionException;
 import java.util.ArrayList;
 import java.util.List;
 import exception.OperationException;
+import java.sql.Date;
 
 public class GestioneOrdini {
 	
@@ -98,7 +99,7 @@ public class GestioneOrdini {
         System.out.println("Quantità aggiornata con successo per l'ordine con ID: " + idOrdine);
     }
     
-
+////ANCORA DA IMPLEMENTARE QUI
     public void assegnaConsegna() throws OperationException, DAOException, DBConnectionException {
         // Recupera gli ordini e i fattorini
         List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimoGiorno();
@@ -112,7 +113,9 @@ public class GestioneOrdini {
             throw new OperationException("Nessun fattorino disponibile per l'assegnazione.");
         }
 
-        
+        // Mostra le liste utilizzando i metodi della classe GestioneOrdini
+        mostraListaOrdini(listaOrdini);
+        mostraListaFattorini(listaFattorini);
 
         // Richiama la funzione per creare le consegne
         boolean successo = ConsegnaDAO.creaConsegna();
@@ -127,12 +130,33 @@ public class GestioneOrdini {
             System.out.println("ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
         }
     }
-
+//FINO A QUI
     public static void mostraListaFattorini(List<EntityFattorino> listaFattorini) {
         System.out.println("Lista dei fattorini disponibili:");
         for (EntityFattorino fattorino : listaFattorini) {
             System.out.println("ID Fattorino: " + fattorino.getIdFattorino() + ", Nome: " + fattorino.getNome());
         }
     }
+    
+    // Metodi per salvare le scelte
+    private static EntityOrdine ordineSelezionato;
+    private static EntityFattorino fattorinoSelezionato;
+
+    public static void setOrdineSelezionato(EntityOrdine ordine) {
+        ordineSelezionato = ordine;
+    }
+
+    public static EntityOrdine getOrdineSelezionato() {
+        return ordineSelezionato;
+    }
+
+    public static void setFattorinoSelezionato(EntityFattorino fattorino) {
+        fattorinoSelezionato = fattorino;
+    }
+
+    public static EntityFattorino getFattorinoSelezionato() {
+        return fattorinoSelezionato;
+    }
+	   
 
 }
