@@ -33,6 +33,7 @@ public class GestioneOrdini {
 	public static GestioneOrdini getInstance() 
 	{ 
 		if (gO == null) 
+			
 			gO = new GestioneOrdini(); 
 
 		return gO; 
