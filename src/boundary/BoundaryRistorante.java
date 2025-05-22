@@ -14,9 +14,10 @@ public class BoundaryRistorante {
 	
 	 static Scanner scan = new Scanner(System.in);
 
-	    public static void main(String[] args) {
+	    public static void main(String[] args) { 
 	        boolean exit = false;
 
+	        
 	        while (!exit) {
 	            System.out.println("Gestione Ristorante");
 	            System.out.println("1. Acquista prodotto");
