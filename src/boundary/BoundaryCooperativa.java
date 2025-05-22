@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import control.GestioneOrdini;
 import exception.OperationException;
+import exception.DAOException;
 
 import entity.EntityFattorino;
 import entity.EntityOrdine;
@@ -50,44 +51,52 @@ public class BoundaryCooperativa {
 	}
 	
 	public static void assegnaConsegna() {
+        Scanner scanner = new Scanner(System.in);
 
-	    Scanner scanner = new Scanner(System.in);
+        try {
+            // Recupera la lista di tutti i fattorini
+            List<EntityFattorino> fattorini = FattorinoDAO.readAllFattorini();
+            if (fattorini.isEmpty()) {
+                System.out.println("Nessun fattorino disponibile.");
+                return;
+            }
 
-	    try {
-	        // Recupera la lista di tutti i fattorini
-	        List<EntityFattorino> fattorini = FattorinoDAO.readAllFattorini();
-	        System.out.println("Seleziona un fattorino dall'elenco:");
-	        GestioneOrdini.mostraListaFattorini(fattorini);
+            System.out.println("Seleziona un fattorino dall'elenco:");
+            GestioneOrdini.mostraListaFattorini(fattorini);
 
-	        System.out.print("Inserisci il numero del fattorino selezionato: ");
-	        int sceltaFattorino = scanner.nextInt();
-	        EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
+            System.out.print("Inserisci il numero del fattorino selezionato: ");
+            int sceltaFattorino = scanner.nextInt();
+            EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
 
-	        // Recupera la lista degli ordini dell'ultimo giorno
-	        List<EntityOrdine> ordini = OrdineDAO.readOrdiniUltimoGiorno();
-	        System.out.println("Seleziona un ordine dall'elenco:");
-	        GestioneOrdini.mostraListaOrdini(ordini);
+            // Recupera la lista degli ordini dell'ultimo giorno
+            List<EntityOrdine> ordini = OrdineDAO.readOrdiniUltimoGiorno();
+            if (ordini.isEmpty()) {
+                System.out.println("Nessun ordine disponibile.");
+                return;
+            }
 
-	        System.out.print("Inserisci il numero dell'ordine selezionato: ");
-	        int sceltaOrdine = scanner.nextInt();
-	        EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
+            System.out.println("Seleziona un ordine dall'elenco:");
+            GestioneOrdini.mostraListaOrdini(ordini);
 
-	        // Salva le scelte
-	        System.out.println("Fattorino selezionato: " + fattorinoSelezionato.getNome());
-	        System.out.println("Ordine selezionato: ID " + ordineSelezionato.getIdOrdine());
+            System.out.print("Inserisci il numero dell'ordine selezionato: ");
+            int sceltaOrdine = scanner.nextInt();
+            EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
 
-	        // Passa le scelte a GestioneOrdini
-	        GestioneOrdini.setOrdineSelezionato(ordineSelezionato);
-	        GestioneOrdini.setFattorinoSelezionato(fattorinoSelezionato);
+            // Passa le scelte a GestioneOrdini
+            GestioneOrdini.assegnaConsegna(ordineSelezionato, fattorinoSelezionato);
 
-	    } catch (IndexOutOfBoundsException e) {
-	        System.out.println("Selezione non valida. Riprova.");
-	    } catch (Exception e) {
-	        System.out.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
-	    } finally {
-	        scanner.close();
-	    }
-	}
+            System.out.println("Consegna assegnata con successo!");
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Selezione non valida. Riprova.");
+        } catch (DAOException | DBConnectionException e) {
+            System.out.println("Errore durante il recupero dei dati: " + e.getMessage());
+        } catch (OperationException e) {
+            System.out.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
  
 }
 	
