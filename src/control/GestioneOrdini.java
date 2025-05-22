@@ -99,38 +99,56 @@ public class GestioneOrdini {
         System.out.println("Quantità aggiornata con successo per l'ordine con ID: " + idOrdine);
     }
     
-////ANCORA DA IMPLEMENTARE QUI
-    public void assegnaConsegna() throws OperationException, DAOException, DBConnectionException {
-        // Recupera gli ordini e i fattorini
-        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimoGiorno();
-        List<EntityFattorino> listaFattorini = FattorinoDAO.readAllFattorini();
 
-        // Controlla se le liste sono vuote
-        if (listaOrdini.isEmpty()) {
-            throw new OperationException("Nessun ordine disponibile per l'assegnazione.");
-        }
-        if (listaFattorini.isEmpty()) {
-            throw new OperationException("Nessun fattorino disponibile per l'assegnazione.");
-        }
-
-        // Mostra le liste utilizzando i metodi della classe GestioneOrdini
-        mostraListaOrdini(listaOrdini);
-        mostraListaFattorini(listaFattorini);
-
-        // Richiama la funzione per creare le consegne
-        boolean successo = ConsegnaDAO.creaConsegna();
-        if (!successo) {
-            throw new OperationException("Errore durante l'assegnazione delle consegne.");
-        }
-    }
-    
+	public void assegnaConsegna() throws OperationException, DAOException, DBConnectionException {
+	
+	    // Recupera gli ordini e i fattorini
+	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimoGiorno();
+	    List<EntityFattorino> listaFattorini = FattorinoDAO.readAllFattorini();
+	
+	    // Controlla se le liste sono vuote
+	    if (listaOrdini.isEmpty()) {
+	        throw new OperationException("Nessun ordine disponibile per l'assegnazione.");
+	    }
+	    if (listaFattorini.isEmpty()) {
+	        throw new OperationException("Nessun fattorino disponibile per l'assegnazione.");
+	    }
+	
+	    // Mostra le liste utilizzando i metodi della classe GestioneOrdini
+	    mostraListaOrdini(listaOrdini);
+	    mostraListaFattorini(listaFattorini);
+	
+	    // Recupera ordine e fattorino selezionati da GestioneOrdini
+	    EntityOrdine ordineSelezionato = GestioneOrdini.getOrdineSelezionato();
+	    EntityFattorino fattorinoSelezionato = GestioneOrdini.getFattorinoSelezionato();
+	
+	    // Controlla se ordine e fattorino sono stati selezionati
+	    if (ordineSelezionato == null) {
+	        throw new OperationException("Nessun ordine selezionato.");
+	    }
+	    if (fattorinoSelezionato == null) {
+	        throw new OperationException("Nessun fattorino selezionato.");
+	    }
+	
+	    // Richiama la funzione per creare la consegna
+	    boolean successo = ConsegnaDAO.creaConsegna(new java.sql.Date(System.currentTimeMillis()));
+	
+	    if (!successo) {
+	        throw new OperationException("Errore durante l'assegnazione della consegna.");
+	    }
+	
+	    // Stampa un riepilogo delle scelte selezionate
+	    stampaScelteSelezionate();
+	}
+	
+	    // Metodi per mostrare le liste
     public static void mostraListaOrdini(List<EntityOrdine> listaOrdini) {
         System.out.println("Lista degli ordini disponibili:");
         for (EntityOrdine ordine : listaOrdini) {
             System.out.println("ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
         }
     }
-//FINO A QUI
+
     public static void mostraListaFattorini(List<EntityFattorino> listaFattorini) {
         System.out.println("Lista dei fattorini disponibili:");
         for (EntityFattorino fattorino : listaFattorini) {
@@ -157,6 +175,36 @@ public class GestioneOrdini {
     public static EntityFattorino getFattorinoSelezionato() {
         return fattorinoSelezionato;
     }
+    
+
+	public static void stampaScelteSelezionate() {
+	    EntityOrdine ordineSelezionato = getOrdineSelezionato();
+	    EntityFattorino fattorinoSelezionato = getFattorinoSelezionato();
+	
+	    System.out.println("========================================");
+	    System.out.println("          Riepilogo Scelte Utente       ");
+	    System.out.println("========================================");
+	
+	    if (ordineSelezionato != null) {
+	        System.out.println("Ordine Selezionato:");
+	        System.out.println("  - ID Ordine: " + ordineSelezionato.getIdOrdine());
+	    } else {
+	        System.out.println("  - Nessun ordine selezionato.");
+	    }
+	
+	    System.out.println("----------------------------------------");
+	
+	    if (fattorinoSelezionato != null) {
+	        System.out.println("Fattorino Selezionato:");
+	        System.out.println("  - Nome: " + fattorinoSelezionato.getNome());
+	        System.out.println("  - ID Fattorino: " + fattorinoSelezionato.getIdFattorino());
+	    } else {
+	        System.out.println("  - Nessun fattorino selezionato.");
+	    }
+	
+	    System.out.println("========================================");
+	}
+
 	   
 
 }
