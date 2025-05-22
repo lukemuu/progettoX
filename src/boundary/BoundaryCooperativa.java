@@ -1,8 +1,8 @@
 package boundary;
-
+ 
 import java.util.List;
 import java.sql.Connection;
-
+ 
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-
+ 
 import control.GestioneOrdini;
 import exception.OperationException;
 import exception.DAOException;
-
+ 
 import entity.EntityFattorino;
 import entity.EntityOrdine;
 import database.FattorinoDAO;
@@ -25,13 +25,13 @@ import database.ProdottoDAO;
 import entity.EntityPescheria;
 import entity.EntityProdotto;
 import exception.DBConnectionException;
-
-
-
+ 
+ 
+ 
 public class BoundaryCooperativa {
-
+ 
 	static Scanner scan = new Scanner(System.in);
-
+ 
 	public static void main(String[] args) {		
 		boolean exit = false;
 		
@@ -43,7 +43,7 @@ public class BoundaryCooperativa {
 			System.out.println("4. Esci");
 			
 			String op = scan.nextLine();
-
+ 
 			if(op.equals("2")) {
 				assegnaConsegna();
 			} else if(op.equals("4")){
@@ -59,7 +59,7 @@ public class BoundaryCooperativa {
 	
 	public static void assegnaConsegna() {
         Scanner scanner = new Scanner(System.in);
-
+ 
         try {
             // Recupera la lista di tutti i fattorini
             List<EntityFattorino> fattorini = FattorinoDAO.readAllFattorini();
@@ -67,33 +67,33 @@ public class BoundaryCooperativa {
                 System.out.println("Nessun fattorino disponibile.");
                 return;
             }
-
+ 
             System.out.println("Seleziona un fattorino dall'elenco:");
             GestioneOrdini.mostraListaFattorini(fattorini);
-
+ 
             System.out.print("Inserisci il numero del fattorino selezionato: ");
             int sceltaFattorino = scanner.nextInt();
             EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
-
+ 
             // Recupera la lista degli ordini dell'ultimo giorno
             List<EntityOrdine> ordini = OrdineDAO.readOrdiniUltimoGiorno();
             if (ordini.isEmpty()) {
                 System.out.println("Nessun ordine disponibile.");
                 return;
             }
-
+ 
             System.out.println("Seleziona un ordine dall'elenco:");
             GestioneOrdini.mostraListaOrdini(ordini);
-
+ 
             System.out.print("Inserisci il numero dell'ordine selezionato: ");
             int sceltaOrdine = scanner.nextInt();
             EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
-
+ 
             // Passa le scelte a GestioneOrdini
             GestioneOrdini.assegnaConsegna(ordineSelezionato, fattorinoSelezionato);
-
+ 
             System.out.println("Consegna assegnata con successo!");
-
+ 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Selezione non valida. Riprova.");
         } catch (DAOException | DBConnectionException e) {
@@ -106,7 +106,3 @@ public class BoundaryCooperativa {
     }
  
 }
-	
-	
-	
-
