@@ -4,8 +4,10 @@ import database.OrdineDAO;
 import database.ConsegnaDAO;
 import database.PescheriaDAO;
 import database.FattorinoDAO;
+import database.ProdottoDAO;
 import entity.EntityOrdine;
 import entity.EntityPescheria;
+import entity.EntityProdotto;
 import entity.EntityFattorino;
 import boundary.BoundaryCooperativa;
 
@@ -205,6 +207,49 @@ public class GestioneOrdini {
 	    System.out.println("========================================");
 	}
 
-	   
+	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, int quantita) throws OperationException {
+        EntityProdotto prodotto = null;
+        float prezzoTotale = 0;
+
+        ArrayList<String> returnList = new ArrayList<>();
+        returnList.add("0"); // Prezzo totale
+        returnList.add("null"); // Dettagli ordine temporaneo
+
+        try {
+            // Controllo esistenza prodotto
+            prodotto = ProdottoDAO.readProdotto(idPescheria, idProdotto);
+
+            if (prodotto == null) {
+                throw new OperationException("Prodotto non trovato");
+            }
+
+            // Calcolo prezzo totale
+            prezzoTotale = calcolaPrezzo(prodotto.getPrezzo(), quantita);
+            returnList.set(0, String.valueOf(prezzoTotale));
+
+            // Creazione ordine temporaneo
+            EntityOrdine ordineTemporaneo = new EntityOrdine(
+                OrdineDAO.getNextId(), // Genera un ID univoco
+                idPescheria,
+                idProdotto,
+                quantita,
+                prezzoTotale
+            );
+
+            // Salva l'ordine temporaneo in memoria o in una lista temporanea
+            OrdineDAO.addOrdineTemporaneo(ordineTemporaneo);
+
+        } catch (DBConnectionException dbEx) {
+            throw new OperationException("Errore di connessione al database");
+        } catch (DAOException ex) {
+            throw new OperationException("Errore durante l'elaborazione dell'ordine");
+        }
+
+        return returnList;
+    }
+
+    private float calcolaPrezzo(float prezzoUnitario, int quantita) {
+        return prezzoUnitario * quantita;
+    }  
 
 }
