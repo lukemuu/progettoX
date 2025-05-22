@@ -16,6 +16,9 @@ import exception.DBConnectionException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.MessagingException;
+
 import exception.OperationException;
 import java.sql.Date;
 
@@ -35,37 +38,53 @@ public class GestioneOrdini {
 		return gO; 
 	}
 	
-	
+	public void inviaReport() {
+	    try {
+	        // Ottieni la lista degli ordini degli ultimi 7 giorni
+	        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimaSettimana();
+ 
+	        // Ottieni la lista delle pescherie
+	        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
+	        
+	        // Configura il servizio email (questi parametri andrebbero spostati in un file di configurazione)
+	        EmailService emailService = new EmailService(
+	            "smtp.tuodominio.it",  // host SMTP
+	            587,                   // porta SMTP
+	            "report@tuodominio.it", // username
+	            "password_sicura",     // password
+	            true                   // abilita TLS
+	        );
+ 
+	        // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
+	        for (EntityPescheria pescheria : listaPescherie) {
+	            String email = pescheria.getEmail();
+	            String nomePescheria = pescheria.getNome(); // Assumendo che ci sia un metodo getNome()
+	            int IdPescheria = pescheria.getIdPescheria();
+ 
+	            List<EntityOrdine> ordiniPescheria = new ArrayList<>();
+ 
+	            // Filtra gli ordini per questa pescheria
+	            for (EntityOrdine ordine : listaOrdini) {
+	                if (ordine.getIdPescheria() == IdPescheria) {
+	                    ordiniPescheria.add(ordine);
+	                }
+	            }
+	            
+	            // Invia il report in ogni caso, anche se non ci sono ordini
+	            try {
+	                emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
+	                System.out.println("Report inviato a: " + email + " (" + nomePescheria +
+	                                 (ordiniPescheria.isEmpty() ? " - Nessun ordine" : ""));
+	            } catch (MessagingException e) {
+	                System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
+	            }
+	        }
+	    } catch (DAOException | DBConnectionException e) {
+	        System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
+	    }
+	}
 
-    public void inviaReport() {
-        try {
-            // Ottieni la lista degli ordini degli ultimi 7 giorni
-            List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniUltimaSettimana();
-
-            // Ottieni la lista delle pescherie
-            List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-
-            // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
-            for (EntityPescheria pescheria : listaPescherie) {
-                String email = pescheria.getEmail();
-                int IdPescheria = pescheria.getIdPescheria();
-
-                List<EntityOrdine> ordiniPescheria = new ArrayList<>();
-
-                // Filtra gli ordini per questa pescheria
-                for (EntityOrdine ordine : listaOrdini) {
-                    if (ordine.getIdPescheria() == IdPescheria) {
-                        ordiniPescheria.add(ordine);
-                    }
-                }
-
-                // Logica per inviare il report (da implementare)
-                System.out.println("Report inviato a: " + email);
-            }
-        } catch (DAOException | DBConnectionException e) {
-            System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
-        }
-    }
+    
     public void modificaOrdine(int idOrdine, int quantitaAggiornata) throws OperationException, DAOException, DBConnectionException {
 
         if (quantitaAggiornata <= 0) {
