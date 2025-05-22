@@ -42,13 +42,8 @@ public class GestioneOrdini {
 	        // Ottieni la lista delle pescherie
 	        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
 	        // Configura il servizio email (questi parametri andrebbero spostati in un file di configurazione)
-	        EmailService emailService = new EmailService(
-	            "smtp.tuodominio.it",  // host SMTP
-	            587,                   // porta SMTP
-	            "report@tuodominio.it", // username
-	            "password_sicura",     // password
-	            true                   // abilita TLS
-	        );
+	        EmailService emailService = new EmailService();
+	        
 	        // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
 	        for (EntityPescheria pescheria : listaPescherie) {
 	            String email = pescheria.getEmail();

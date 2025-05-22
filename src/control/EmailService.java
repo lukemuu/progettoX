@@ -13,13 +13,15 @@ public class EmailService {
     private String password;
     private boolean tlsEnabled;
  
-    public EmailService(String host, int port, String username, String password, boolean tlsEnabled) {
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        this.password = password;
-        this.tlsEnabled = tlsEnabled;
-    }
+
+	public EmailService() {
+	    this.host = "smtp.gmail.com";
+	    this.port = 587;
+	    this.username = System.getenv("EMAIL_USERNAME"); // Variabile d'ambiente
+	    this.password = System.getenv("EMAIL_PASSWORD"); // Variabile d'ambiente
+	    this.tlsEnabled = true;
+	}
+
  
     public void inviaReportOrdini(String destinatario, String nomePescheria, List<EntityOrdine> ordini) throws MessagingException {
         // Configurazione delle proprietà per il server SMTP
