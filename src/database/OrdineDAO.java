@@ -35,7 +35,7 @@ public class OrdineDAO {
                         result.getInt("IDPESCHERIA"),
                         result.getDate("DATA"),
                         result.getInt("IDPRODOTTO"),
-                        result.getFloat("QTA")
+                        result.getDouble("QTA")
                     );
                 }
             } catch (SQLException e) {
@@ -65,8 +65,8 @@ public class OrdineDAO {
                 stmt.setInt(3, ordine.getIdPescheria());
                 stmt.setDate(4, new java.sql.Date(ordine.getData().getTime()));
                 stmt.setInt(5, ordine.getIdProdotto());
-                stmt.setFloat(6, ordine.getQta());
-                stmt.setFloat(7, ordine.getQtaAggiornata());
+                stmt.setDouble(6, ordine.getQta());
+                stmt.setDouble(7, ordine.getQtaAggiornata());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -95,8 +95,8 @@ public class OrdineDAO {
                 stmt.setInt(2, ordine.getIdPescheria());
                 stmt.setDate(3, new java.sql.Date(ordine.getData().getTime()));
                 stmt.setInt(4, ordine.getIdProdotto());
-                stmt.setFloat(5, ordine.getQta());
-                stmt.setFloat(6, ordine.getQtaAggiornata());
+                stmt.setDouble(5, ordine.getQta());
+                stmt.setDouble(6, ordine.getQtaAggiornata());
                 stmt.setInt(7, ordine.getIdOrdine());
 
                 success = stmt.executeUpdate() > 0;
@@ -192,7 +192,7 @@ public class OrdineDAO {
 	                    result.getInt("IDPESCHERIA"),
 	                    result.getDate("DATA"),
 	                    result.getInt("IDPRODOTTO"),
-	                    result.getFloat("QTA")
+	                    result.getDouble("QTA")
 	                );
 	                ordini.add(ordine);
 	            }
@@ -226,7 +226,7 @@ public class OrdineDAO {
 	                    result.getInt("IDPESCHERIA"),
 	                    result.getDate("DATA"),
 	                    result.getInt("IDPRODOTTO"),
-	                    result.getFloat("QTA")
+	                    result.getDouble("QTA")
 	                );
 	                ordini.add(ordine);
 	            }

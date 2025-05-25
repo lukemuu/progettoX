@@ -13,7 +13,7 @@ public class EntityOrdine {
 	private double qtaAggiornata;
 	
 	
-	public EntityOrdine(int idOrdine, int idRistorante, int idPescheria, Date data, int idProdotto, float qta) {
+	public EntityOrdine(int idOrdine, int idRistorante, int idPescheria, Date data, int idProdotto, double qta) {
 		super();
 		IdOrdine = idOrdine;
 		IdRistorante = idRistorante;
@@ -70,9 +70,6 @@ public class EntityOrdine {
 	public void setQtaAggiornata(double qtaAggiornata) {
 		this.qtaAggiornata = qtaAggiornata;
 	}
-	
-	
-	
 	
 
 }
