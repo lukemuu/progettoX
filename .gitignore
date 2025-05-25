@@ -26,4 +26,5 @@ Thumbs.db
 # File di configurazione di Eclipse (se usato)
 .project
 .classpath
+lib/
 .settings/
