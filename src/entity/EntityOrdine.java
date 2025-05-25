@@ -2,6 +2,10 @@ package entity;
 
 import java.util.Date;
 
+import database.OrdineDAO;
+import exception.DAOException;
+import exception.DBConnectionException;
+
 public class EntityOrdine {
 	
 	private int IdOrdine;
@@ -69,6 +73,10 @@ public class EntityOrdine {
 	}
 	public void setQtaAggiornata(double qtaAggiornata) {
 		this.qtaAggiornata = qtaAggiornata;
+	}
+	
+	public void saveOrdine() throws DAOException, DBConnectionException {
+	    OrdineDAO.createOrdine(this);
 	}
 	
 

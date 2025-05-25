@@ -24,6 +24,12 @@ import java.sql.Date;
  
 public class GestioneOrdini {
 	private static GestioneOrdini gO = null;
+	private List<EntityOrdine> ordiniTemporanei = new ArrayList<>(); // Lista per ordini temporanei
+	private static int nextId = 1; // Contatore statico per ID univoci
+
+	private synchronized static int generateUniqueId() {
+	    return nextId++;
+	}
 	protected GestioneOrdini(){
  
 	}
@@ -183,7 +189,7 @@ public class GestioneOrdini {
         System.out.println("========================================");
     }
  
-	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, int quantita) throws OperationException {
+	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, double quantita) throws OperationException {
         EntityProdotto prodotto = null;
         float prezzoTotale = 0;
  
@@ -202,18 +208,20 @@ public class GestioneOrdini {
             // Calcolo prezzo totale
             prezzoTotale = calcolaPrezzo(prodotto.getPrezzo(), quantita);
             returnList.set(0, String.valueOf(prezzoTotale));
- 
+            
+            int idOrdine = generateUniqueId();
             // Creazione ordine temporaneo
             EntityOrdine ordineTemporaneo = new EntityOrdine(
-                OrdineDAO.getNextId(), // Genera un ID univoco
-                idPescheria,
-                idProdotto,
-                quantita,
-                prezzoTotale
-            );
+            	    idOrdine, // Genera un ID univoco
+            	    idRistorante,          // ID del ristorante (da aggiungere come parametro)
+            	    idPescheria,
+            	    new Date(System.currentTimeMillis()), // Data corrente
+            	    idProdotto,
+            	    quantita
+            	);
  
-            // Salva l'ordine temporaneo in memoria o in una lista temporanea
-            OrdineDAO.addOrdineTemporaneo(ordineTemporaneo);
+            // Salva l'ordine temporaneo  in una lista temporanea
+               ordiniTemporanei.add(ordineTemporaneo);
  
         } catch (DBConnectionException dbEx) {
             throw new OperationException("Errore di connessione al database");
@@ -224,11 +232,11 @@ public class GestioneOrdini {
         return returnList;
     }
  
-    private float calcolaPrezzo(float prezzoUnitario, int quantita) {
-        return prezzoUnitario * quantita;
+    private float calcolaPrezzo(float prezzoUnitario, double quantita) {
+        return prezzoUnitario * (float)quantita;
     }  
     
-    public void inviaOrdine(int idPescheria, int codProdotto, int quantita) throws OperationException {
+    public void inviaOrdine(int idPescheria, int codProdotto, double quantita) throws OperationException {
         try {
             // Recupera la pescheria in base all'ID
             EntityPescheria pescheria = PescheriaDAO.readPescheria(String.valueOf(idPescheria));
@@ -249,6 +257,25 @@ public class GestioneOrdini {
         } catch (DAOException | DBConnectionException e) {
             throw new OperationException("Errore durante la selezione della pescheria: " + e.getMessage());
         }
+    }
+    
+    public void emettiOrdine() throws OperationException {
+        if (ordiniTemporanei.isEmpty()) {
+            throw new OperationException("Nessun ordine temporaneo da emettere.");
+        }
+
+        try {
+            // Salva tutti gli ordini temporanei utilizzando il metodo saveOrdine
+            for (EntityOrdine ordine : ordiniTemporanei) {
+                ordine.saveOrdine(); // Chiama il metodo saveOrdine di EntityOrdine
+            }
+            ordiniTemporanei.clear(); // Svuota la lista dopo il salvataggio
+            
+        } catch (DAOException | DBConnectionException e) {
+            throw new OperationException("Errore durante il salvataggio degli ordini: " + e.getMessage());
+        }
+        
+       
     }
  
 }

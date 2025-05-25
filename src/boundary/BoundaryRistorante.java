@@ -9,6 +9,7 @@ import exception.DAOException;
 import exception.DBConnectionException;
 import exception.OperationException;
 import entity.EntityProdotto;
+import java.util.concurrent.TimeUnit;
 
 public class BoundaryRistorante {
 	
@@ -45,7 +46,7 @@ public class BoundaryRistorante {
 
 	            int idPescheria = 0;
 	            int idProdotto = 0;
-	            int quantita = 0;
+	            double quantita = 0;
 	            boolean inputValido = false;
 
 	            while (!inputValido) {
@@ -84,6 +85,68 @@ public class BoundaryRistorante {
 
 	            System.out.println("Ordine confermato con successo!");
 	            System.out.println("Prezzo totale: " + results.get(0) + " euro");
+	            
+	            
+	            GestioneOrdini.getInstance().inviaOrdine(idPescheria, idProdotto, quantita);
+
+	            
+	            //Assumo sempre vera la conferma da parte della pescheria
+	            
+	            if (true) { 
+	                inputValido = false;
+	                while (!inputValido) {
+	                    System.out.println("Inserire il numero di carta:");
+
+	                    String numeroCarta = scan.nextLine();
+
+	                    try {
+	                        Long.parseLong(numeroCarta);
+
+	                        if (numeroCarta.length() == 16) {
+	                            inputValido = true;
+	                        } else {
+	                            System.out.println("Errore inserimento carta, deve essere di 16 cifre..");
+	                        }
+	                    } catch (NumberFormatException e) {
+	                        System.out.println("Errore inserimento carta, deve contenere solo numeri..");
+	                    }
+	                }
+
+	                System.out.println();
+	                System.out.println("Pagamento in corso..");
+	                TimeUnit.SECONDS.sleep(3);
+	                System.out.println("Pagamento effettuato!");
+
+	                if (true) { 
+	                    System.out.println("Conferma del pagamento ricevuta.");
+	                    GestioneOrdini.getInstance().emettiOrdine();
+	                    
+
+		                System.out.println("Acquisto completato!");
+		                System.out.println();
+		                System.out.println();
+	                    
+	                } 
+	                //else {
+	                    //System.out.println("Errore nella conferma del pagamento.");
+	                    //GestioneOrdini.getInstance().annullaOrdine(idPescheria, idProdotto, quantita);
+	                }
+
+	                //System.out.println("Invio conferma ordine in corso..");
+	                //TimeUnit.SECONDS.sleep(3);
+	               // System.out.println("Conferma ordine inviata sulla mail indicata..");
+
+	               // System.out.println("Acquisto completato!");
+	               // System.out.println();
+	               // System.out.println();
+	            
+	            //else {
+	                
+					// conferma della pescheria== false quindi verrà effettuata la modifica dell'ordine
+				
+	            //}
+	            
+	            
 
 	        } catch (OperationException oE) {
 	            System.out.println(oE.getMessage());
