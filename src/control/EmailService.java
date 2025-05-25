@@ -68,4 +68,42 @@ public class EmailService {
         // Invio dell'email
         Transport.send(message);
     }
+    
+    public void inviaMail(String emailPescheria, int codProdotto, int quantita) throws MessagingException {
+        // Configurazione delle proprietà per il server SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", String.valueOf(tlsEnabled));
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", String.valueOf(port));
+
+        // Creazione della sessione con autenticazione
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        // Creazione del messaggio email
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailPescheria));
+        message.setSubject("Nuovo Ordine");
+
+        // Corpo dell'email
+        StringBuilder corpoEmail = new StringBuilder();
+        corpoEmail.append("Gentile Pescheria,\n\n");
+        corpoEmail.append("È stato effettuato un ordine con i seguenti dettagli:\n");
+        corpoEmail.append("- Codice Prodotto: ").append(codProdotto).append("\n");
+        corpoEmail.append("- Quantità: ").append(quantita).append("\n\n");
+        corpoEmail.append("Cordiali saluti,\nGestione Ristorante");
+
+        message.setText(corpoEmail.toString());
+
+        // Invio dell'email
+        Transport.send(message);
+
+        System.out.println("E-mail inviata con successo a: " + emailPescheria);
+    }
 }

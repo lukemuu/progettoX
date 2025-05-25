@@ -227,5 +227,28 @@ public class GestioneOrdini {
     private float calcolaPrezzo(float prezzoUnitario, int quantita) {
         return prezzoUnitario * quantita;
     }  
+    
+    public void inviaOrdine(int idPescheria, int codProdotto, int quantita) throws OperationException {
+        try {
+            // Recupera la pescheria in base all'ID
+            EntityPescheria pescheria = PescheriaDAO.readPescheria(String.valueOf(idPescheria));
+            EmailService emailService = new EmailService();
+            if (pescheria == null) {
+                throw new OperationException("Pescheria non trovata con l'ID specificato.");
+            }
+
+            // Recupera l'e-mail della pescheria
+            String emailPescheria = pescheria.getEmail();
+
+            try {
+                emailService.inviaMail(emailPescheria, codProdotto, quantita);
+            } catch (MessagingException e) {
+                throw new OperationException("Errore durante l'invio dell'e-mail: " + e.getMessage());
+            }
+
+        } catch (DAOException | DBConnectionException e) {
+            throw new OperationException("Errore durante la selezione della pescheria: " + e.getMessage());
+        }
+    }
  
 }
