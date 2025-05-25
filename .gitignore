@@ -1,1 +1,29 @@
 /bin/
+
+
+# File di configurazione delle variabili d'ambiente
+.env
+
+# File generati dall'IDE IntelliJ IDEA
+.idea/
+*.iml
+
+# File di log
+*.log
+
+# File compilati
+/out/
+*.class
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# File di configurazione specifici del sistema operativo
+*.swp
+*.swo
+
+# File di configurazione di Eclipse (se usato)
+.project
+.classpath
+.settings/
