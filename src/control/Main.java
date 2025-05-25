@@ -45,7 +45,7 @@ public class Main {
             System.err.println("❌ Errore durante l'invio dell'email: " + e.getMessage());
             e.printStackTrace();
         }
- 
+
         scanner.close();
     }
  
