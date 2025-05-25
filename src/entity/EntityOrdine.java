@@ -9,8 +9,8 @@ public class EntityOrdine {
 	private int IdPescheria;
 	private Date data;
 	private int IdProdotto;
-	private float qta;
-	private float qtaAggiornata;
+	private double qta;
+	private double qtaAggiornata;
 	
 	
 	public EntityOrdine(int idOrdine, int idRistorante, int idPescheria, Date data, int idProdotto, float qta) {
@@ -58,16 +58,16 @@ public class EntityOrdine {
 	public void setIdProdotto(int idProdotto) {
 		IdProdotto = idProdotto;
 	}
-	public float getQta() {
+	public double getQta() {
 		return qta;
 	}
-	public void setQta(float qta) {
+	public void setQta(double qta) {
 		this.qta = qta;
 	}
-	public float getQtaAggiornata() {
+	public double getQtaAggiornata() {
 		return qtaAggiornata;
 	}
-	public void setQtaAggiornata(float qtaAggiornata) {
+	public void setQtaAggiornata(double qtaAggiornata) {
 		this.qtaAggiornata = qtaAggiornata;
 	}
 	
