@@ -9,4 +9,5 @@ module progettoX {
 	requires java.mail;
 	requires java.desktop;
 	requires java.base;
+	requires junit;
 }
