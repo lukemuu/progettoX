@@ -212,11 +212,10 @@ public class GestioneOrdini {
             int idOrdine = generateUniqueId();
             // Creazione ordine temporaneo
             EntityOrdine ordineTemporaneo = new EntityOrdine(
-            	    idOrdine, // Genera un ID univoco
             	    idRistorante,          // ID del ristorante (da aggiungere come parametro)
             	    idPescheria,
-            	    new Date(System.currentTimeMillis()), // Data corrente
-            	    idProdotto,
+            	    idProdotto, // Data corrente
+            	    new Date(System.currentTimeMillis()),
             	    quantita
             	);
  

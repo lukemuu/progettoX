@@ -30,11 +30,10 @@ public class OrdineDAO {
 
                 if (result.next()) {
                     ordine = new EntityOrdine(
-                        result.getInt("IDORDINE"),
                         result.getInt("IDRISTORANTE"),
                         result.getInt("IDPESCHERIA"),
-                        result.getDate("DATA"),
                         result.getInt("IDPRODOTTO"),
+                        result.getDate("DATA"),
                         result.getDouble("QTA")
                     );
                 }
@@ -151,11 +150,10 @@ public class OrdineDAO {
 
                 while (result.next()) {
                     EntityOrdine ordine = new EntityOrdine(
-                        result.getInt("IDORDINE"),
                         result.getInt("IDRISTORANTE"),
                         result.getInt("IDPESCHERIA"),
-                        result.getDate("DATA"),
                         result.getInt("IDPRODOTTO"),
+                        result.getDate("DATA"),
                         result.getFloat("QTA")
                     );
                     ordini.add(ordine);
@@ -187,11 +185,10 @@ public class OrdineDAO {
 	
 	            while (result.next()) {
 	                EntityOrdine ordine = new EntityOrdine(
-	                    result.getInt("IDORDINE"),
 	                    result.getInt("IDRISTORANTE"),
 	                    result.getInt("IDPESCHERIA"),
-	                    result.getDate("DATA"),
 	                    result.getInt("IDPRODOTTO"),
+	                    result.getDate("DATA"),
 	                    result.getDouble("QTA")
 	                );
 	                ordini.add(ordine);
@@ -221,11 +218,10 @@ public class OrdineDAO {
 
 	            while (result.next()) {
 	                EntityOrdine ordine = new EntityOrdine(
-	                    result.getInt("IDORDINE"),
 	                    result.getInt("IDRISTORANTE"),
 	                    result.getInt("IDPESCHERIA"),
-	                    result.getDate("DATA"),
 	                    result.getInt("IDPRODOTTO"),
+	                    result.getDate("DATA"),
 	                    result.getDouble("QTA")
 	                );
 	                ordini.add(ordine);
