@@ -47,6 +47,7 @@ public class BoundaryRistorante {
 	            int idPescheria = 0;
 	            int idProdotto = 0;
 	            double quantita = 0;
+	            int idRistorante = 1; // Aggiunto per identificare il ristorante
 	            boolean inputValido = false;
 
 	            while (!inputValido) {
@@ -71,7 +72,7 @@ public class BoundaryRistorante {
 	                }
 	            }
 
-	            ArrayList<String> results = GestioneOrdini.getInstance().acquistaProdotto(idPescheria, idProdotto, quantita);
+	            ArrayList<String> results = GestioneOrdini.getInstance().acquistaProdotto(idPescheria, idProdotto, quantita, idRistorante);
 
 	            System.out.println("Prezzo totale: " + results.get(0) + " euro");
 	            System.out.println("Digita 'S' per confermare o qualunque altro carattere per annullare..");

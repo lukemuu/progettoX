@@ -189,7 +189,7 @@ public class GestioneOrdini {
         System.out.println("========================================");
     }
  
-	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, double quantita) throws OperationException {
+	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, double quantita,int idRistorante) throws OperationException {
         EntityProdotto prodotto = null;
         float prezzoTotale = 0;
  
