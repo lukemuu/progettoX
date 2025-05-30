@@ -3,11 +3,9 @@ package entity;
 public class EntityPescheria {
 	
 	
-	public EntityPescheria(int idPescheria, String nome, String indirizzo, String email, String username,
-			String password) {
+	public EntityPescheria(String nome, String indirizzo, String email, String username, String password) {
 		
-		super();
-		this.idPescheria = idPescheria;
+		this.idPescheria = contatoreIdPescheria++;
 		this.nome = nome;
 		this.indirizzo = indirizzo;
 		this.email = email;
@@ -16,8 +14,9 @@ public class EntityPescheria {
 	}
 	
 	public EntityPescheria() {
-		super();
 	}
+	
+	private static int contatoreIdPescheria = 1; 
 
 	private int idPescheria;
 	private String nome;

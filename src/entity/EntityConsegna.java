@@ -1,61 +1,59 @@
 package entity;
 
 import java.util.Date;
-import java.util.Set;
 
 public class EntityConsegna {
 	
+	private static int contatoreIdFattorino = 1; 
+	
 	private int idConsegna;
-	private EntityFattorino fattorino;
+	private int idFattorino;
 	private Date data;
-	private java.util.Set<EntityOrdine> ordini;
+	private int[] idOrdini;
 	
 	
 	public EntityConsegna() {
 		
-		super();
+	}
+	
+	public EntityConsegna(int idFattorino, Date data, int[] idOrdini) {
 		
-	}
-	
-	
-	public EntityConsegna(EntityFattorino fattorino, Date data, Set<EntityOrdine> ordini) {
-		super();
-		this.fattorino = fattorino;
+		this.idFattorino = contatoreIdFattorino++; // Incrementa il contatore per ogni nuova consegna;
 		this.data = data;
-		this.ordini = ordini;
+		this.setIdOrdini(idOrdini);
 	}
-	
 
 	public int getIdConsegna() {
 		return idConsegna;
 	}
 
-
 	public void setIdConsegna(int idConsegna) {
 		this.idConsegna = idConsegna;
 	}
 
-
-	public EntityFattorino getFattorino() {
-		return fattorino;
+	public int getIdFattorino() {
+		return idFattorino;
 	}
-
-
-	public void setFattorino(EntityFattorino fattorino) {
-		this.fattorino = fattorino;
+	
+	public void setIdFattorino(int idFattorino) {
+		this.idFattorino = idFattorino;
 	}
-
 
 	public Date getData() {
 		return data;
 	}
 
-
 	public void setData(Date data) {
 		this.data = data;
 	}
-	
-	
+
+	public int[] getIdOrdini() {
+		return idOrdini;
+	}
+
+	public void setIdOrdini(int[] idOrdini) {
+		this.idOrdini = idOrdini;
+	}
 	
 	
 }

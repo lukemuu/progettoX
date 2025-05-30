@@ -30,7 +30,6 @@ public class PescheriaDAO {
 
                 if (result.next()) {
                     pescheria = new EntityPescheria(
-                        result.getInt("IDPESCHERIA"),
                         result.getString("NOME"),
                         result.getString("INDIRIZZO"),
                         result.getString("EMAIL"),
@@ -65,7 +64,6 @@ public class PescheriaDAO {
 	
 	            while (result.next()) {
 	                EntityPescheria pescheria = new EntityPescheria(
-	                    result.getInt("IDPESCHERIA"),
 	                    result.getString("NOME"),
 	                    result.getString("INDIRIZZO"),
 	                    result.getString("EMAIL"),

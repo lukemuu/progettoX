@@ -2,7 +2,9 @@ package entity;
  
 public class EntityProdotto {
 	
-	private int codice;
+	private static int contatoreIdProdotto = 1; // Contatore per generare ID unici
+	
+	private int idProdotto;
 	private String categoria;
 	private String tipologia;
 	private String descrizione;
@@ -12,7 +14,7 @@ public class EntityProdotto {
 	public EntityProdotto(int codice, String categoria, String tipologia, String descrizione, float prezzo,
 			String codicePaese) {
 		super();
-		this.codice = codice;
+		this.idProdotto = contatoreIdProdotto++; // Incrementa il contatore per ogni nuovo prodotto;
 		this.categoria = categoria;
 		this.tipologia = tipologia;
 		this.descrizione = descrizione;
@@ -20,12 +22,12 @@ public class EntityProdotto {
 		this.codicePaese = codicePaese;
 	}
  
-	public int getCodice() {
-		return codice;
+	public int getIdProdotto() {
+		return idProdotto;
 	}
  
-	public void setCodice(int codice) {
-		this.codice = codice;
+	public void setCodice(int idProdotto) {
+		this.idProdotto = idProdotto;
 	}
  
 	public String getCategoria() {

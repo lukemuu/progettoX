@@ -2,29 +2,28 @@ package entity;
 
 public class EntityRistoranteRegistrato {
 	
+	private static int contatoreIdRistorante = 1; 
+	
 	private int idRistoranteRegistrato;
 	private String nome;
 	private String username;
 	private String password;
 	private String indirizzo;
 	private String email;
-	private String cartaDiCredito;
 	
 	public EntityRistoranteRegistrato() {
-		super();
+
 	}
 
 
-	public EntityRistoranteRegistrato(int idRistoranteRegistrato, String nome, String username, String password,
-			String indirizzo, String email, String cartaDiCredito) {
-		super();
-		this.idRistoranteRegistrato = idRistoranteRegistrato;
+	public EntityRistoranteRegistrato(String nome, String username, String password, String indirizzo, String email) {
+
+		this.idRistoranteRegistrato = contatoreIdRistorante++;
 		this.nome = nome;
 		this.username = username;
 		this.password = password;
 		this.indirizzo = indirizzo;
 		this.email = email;
-		this.cartaDiCredito = cartaDiCredito;
 	}
 
 
@@ -86,17 +85,5 @@ public class EntityRistoranteRegistrato {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
-	public String getCartaDiCredito() {
-		return cartaDiCredito;
-	}
-
-
-	public void setCartaDiCredito(String cartaDiCredito) {
-		this.cartaDiCredito = cartaDiCredito;
-	}
-	
-	
 
 }
