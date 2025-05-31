@@ -462,7 +462,7 @@ public class GUI extends JFrame {
                 
                 // Processa ordine
                 gestioneOrdini.inviaOrdine(idPescheria, idProdotto, quantita);
-                gestioneOrdini.emettiOrdine();
+                gestioneOrdini.confermaOrdine(idOrdine);
                 
                 aggiungiLog("Ordine completato: Pescheria " + idPescheria + ", Prodotto " + idProdotto + ", Qty " + quantita);
                 JOptionPane.showMessageDialog(this, "Acquisto completato con successo!", 

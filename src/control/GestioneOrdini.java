@@ -24,12 +24,10 @@ import java.sql.Date;
  
 public class GestioneOrdini {
 	private static GestioneOrdini gO = null;
-	private List<EntityOrdine> ordiniTemporanei = new ArrayList<>(); // Lista per ordini temporanei
-	private static int nextId = 1; // Contatore statico per ID univoci
+	 
+	
 
-	private synchronized static int generateUniqueId() {
-	    return nextId++;
-	}
+
 	protected GestioneOrdini(){
  
 	}
@@ -196,6 +194,7 @@ public class GestioneOrdini {
         ArrayList<String> returnList = new ArrayList<>();
         returnList.add("0"); // Prezzo totale
         returnList.add("null"); // Dettagli ordine temporaneo
+        returnList.add("0"); // ID ordine
  
         try {
             // Controllo esistenza prodotto
@@ -209,9 +208,9 @@ public class GestioneOrdini {
             prezzoTotale = calcolaPrezzo(prodotto.getPrezzo(), quantita);
             returnList.set(0, String.valueOf(prezzoTotale));
             
-            int idOrdine = generateUniqueId();
+            
             // Creazione ordine temporaneo
-            EntityOrdine ordineTemporaneo = new EntityOrdine(
+            EntityOrdine nuovoOrdine = new EntityOrdine(
             	    idRistorante,          // ID del ristorante (da aggiungere come parametro)
             	    idPescheria,
             	    idProdotto, // Data corrente
@@ -220,7 +219,10 @@ public class GestioneOrdini {
             	);
  
             // Salva l'ordine temporaneo  in una lista temporanea
-               ordiniTemporanei.add(ordineTemporaneo);
+            nuovoOrdine.saveOrdine();
+
+            // Aggiungi l'ID dell'ordine alla lista di ritorno
+            returnList.set(2, String.valueOf(nuovoOrdine.getIdOrdine()));
  
         } catch (DBConnectionException dbEx) {
             throw new OperationException("Errore di connessione al database");
@@ -235,7 +237,7 @@ public class GestioneOrdini {
         return prezzoUnitario * (float)quantita;
     }  
     
-    public void inviaOrdine(int idPescheria, int codProdotto, double quantita) throws OperationException {
+    public void inviaOrdine(int idPescheria, int codProdotto, double quantita,int idOrdine) throws OperationException {
         try {
             // Recupera la pescheria in base all'ID
             EntityPescheria pescheria = PescheriaDAO.readPescheria(String.valueOf(idPescheria));
@@ -248,7 +250,7 @@ public class GestioneOrdini {
             String emailPescheria = pescheria.getEmail();
 
             try {
-                emailService.inviaMail(emailPescheria, codProdotto, quantita);
+                emailService.inviaMail(emailPescheria, codProdotto, quantita,idOrdine);
             } catch (MessagingException e) {
                 throw new OperationException("Errore durante l'invio dell'e-mail: " + e.getMessage());
             }
@@ -258,21 +260,20 @@ public class GestioneOrdini {
         }
     }
     
-    public void emettiOrdine() throws OperationException {
-        if (ordiniTemporanei.isEmpty()) {
-            throw new OperationException("Nessun ordine temporaneo da emettere.");
-        }
-
-        try {
-            // Salva tutti gli ordini temporanei utilizzando il metodo saveOrdine
-            for (EntityOrdine ordine : ordiniTemporanei) {
-                ordine.saveOrdine(); // Chiama il metodo saveOrdine di EntityOrdine
-            }
-            ordiniTemporanei.clear(); // Svuota la lista dopo il salvataggio
-            
-        } catch (DAOException | DBConnectionException e) {
-            throw new OperationException("Errore durante il salvataggio degli ordini: " + e.getMessage());
-        }
+    public void confermaOrdine(int idOrdine) throws OperationException {
+    	
+    	 try {
+    	        // Aggiorna lo stato dell'ordine a "Confermato"
+    	        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, "Confermato");
+    	        if (!statoAggiornato) {
+    	            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
+    	        }
+    	    } catch (DBConnectionException dbEx) {
+    	        throw new OperationException("Errore di connessione al database");
+    	    } catch (DAOException ex) {
+    	        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
+    	    }
+       
         
        
     }

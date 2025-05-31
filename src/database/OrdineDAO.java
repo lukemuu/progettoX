@@ -236,5 +236,30 @@ public class OrdineDAO {
 
 	    return ordini;
 	}
+	
+	public static boolean updateStatoOrdine(int idOrdine, String nuovoStato) throws DAOException, DBConnectionException {
+	    boolean success = false;
+
+	    try {
+	        Connection conn = DBManager.getConnection();
+	        String query = "UPDATE ORDINE SET STATO=? WHERE IDORDINE=?;";
+
+	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setString(1, nuovoStato);
+	            stmt.setInt(2, idOrdine);
+
+	            success = stmt.executeUpdate() > 0;
+	        } catch (SQLException e) {
+	            throw new DAOException("Errore aggiornamento stato ordine: " + e.getMessage(), e);
+	        } finally {
+	            DBManager.closeConnection();
+	        }
+
+	    } catch (SQLException e) {
+	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+	    }
+
+	    return success;
+	}
 }
 

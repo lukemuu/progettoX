@@ -87,8 +87,10 @@ public class BoundaryRistorante {
 	            System.out.println("Ordine confermato con successo!");
 	            System.out.println("Prezzo totale: " + results.get(0) + " euro");
 	            
+	            int idOrdine = Integer.parseInt(results.get(2));
 	            
-	            GestioneOrdini.getInstance().inviaOrdine(idPescheria, idProdotto, quantita);
+	            
+	            GestioneOrdini.getInstance().inviaOrdine(idPescheria, idProdotto, quantita,idOrdine);
 
 	            
 	            //Assumo sempre vera la conferma da parte della pescheria
@@ -120,7 +122,9 @@ public class BoundaryRistorante {
 
 	                if (true) { 
 	                    System.out.println("Conferma del pagamento ricevuta.");
-	                    GestioneOrdini.getInstance().emettiOrdine();
+	                    
+	                   
+	                    GestioneOrdini.getInstance().confermaOrdine(idOrdine);
 	                    
 
 		                System.out.println("Acquisto completato!");
@@ -133,14 +137,6 @@ public class BoundaryRistorante {
 	                    //GestioneOrdini.getInstance().annullaOrdine(idPescheria, idProdotto, quantita);
 	                }
 
-	                //System.out.println("Invio conferma ordine in corso..");
-	                //TimeUnit.SECONDS.sleep(3);
-	               // System.out.println("Conferma ordine inviata sulla mail indicata..");
-
-	               // System.out.println("Acquisto completato!");
-	               // System.out.println();
-	               // System.out.println();
-	            
 	            //else {
 	                
 					// conferma della pescheria== false quindi verrà effettuata la modifica dell'ordine
