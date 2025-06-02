@@ -438,9 +438,11 @@ public class GUI extends JFrame {
             int idPescheria = Integer.parseInt(txtIdPescheria.getText());
             int idProdotto = Integer.parseInt(txtIdProdotto.getText());
             double quantita = Double.parseDouble(txtQuantita.getText());
+            int idOrdine = Integer.parseInt(txtIdPescheria.getText()); // Simulazione ID ordine
+            
             String numeroCarta = txtNumeroCarta.getText();
             
-            if (idPescheria <= 0 || idProdotto <= 0 || quantita <= 0) {
+            if (idPescheria <= 0 || idProdotto <= 0 || quantita <= 0 || idOrdine <= 0) {
                 throw new IllegalArgumentException("I valori devono essere positivi");
             }
             
@@ -461,7 +463,7 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(this, progressBar, "Pagamento in corso...", JOptionPane.INFORMATION_MESSAGE);
                 
                 // Processa ordine
-                gestioneOrdini.inviaOrdine(idPescheria, idProdotto, quantita);
+                gestioneOrdini.inviaOrdine(idPescheria, idProdotto, quantita, idOrdine);
                 gestioneOrdini.confermaOrdine(idOrdine);
                 
                 aggiungiLog("Ordine completato: Pescheria " + idPescheria + ", Prodotto " + idProdotto + ", Qty " + quantita);
