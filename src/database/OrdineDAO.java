@@ -237,16 +237,17 @@ public class OrdineDAO {
 	    return ordini;
 	}
 	
+
 	public static List<EntityOrdine> readOrdiniUltimoGiorno() throws DAOException, DBConnectionException {
 	    List<EntityOrdine> ordini = new ArrayList<>();
-
+	    // Modifica la query per selezionare solo gli ordini confermati dell'ultimo giorno
 	    try {
 	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE;";
-
+	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = 'confermato';";
+	
 	        try (PreparedStatement stmt = conn.prepareStatement(query);
 	             ResultSet result = stmt.executeQuery()) {
-
+	
 	            while (result.next()) {
 	                EntityOrdine ordine = new EntityOrdine(
 	                    result.getInt("IDRISTORANTE"),
@@ -258,15 +259,16 @@ public class OrdineDAO {
 	                ordini.add(ordine);
 	            }
 	        } catch (SQLException e) {
-	        	throw new DAOException("Errore lettura ordini dell'ultimo giorno: " + e.getMessage(), e);
+	            throw new DAOException("Errore lettura ordini dell'ultimo giorno: " + e.getMessage(), e);
 	        }
-	     
+	
 	    } catch (SQLException e) {
 	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
 	    }
-
+	
 	    return ordini;
 	}
+
 	
 	public static boolean updateStatoOrdine(int idOrdine, String nuovoStato) throws DAOException, DBConnectionException {
 	    boolean success = false;

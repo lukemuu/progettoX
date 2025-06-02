@@ -1,3 +1,4 @@
+
 package database;
 
 import java.sql.Connection;
@@ -12,42 +13,42 @@ import control.GestioneOrdini;
 
 public class ConsegnaDAO {
 
+    public static boolean creaConsegna(java.sql.Date dataOdierna) throws DAOException, DBConnectionException {
+        boolean success = false;
 
-	public static boolean creaConsegna(java.sql.Date dataOdierna) throws DAOException, DBConnectionException {
-	    boolean success = false;
-	
-	    try {
-	        // Recupera ordine e fattorino selezionati da GestioneOrdini
-	        EntityOrdine ordineSelezionato = GestioneOrdini.getOrdineSelezionato();
-	        EntityFattorino fattorinoSelezionato = GestioneOrdini.getFattorinoSelezionato();
-	
-	        if (ordineSelezionato == null || fattorinoSelezionato == null) {
-	            throw new DAOException("Ordine o fattorino selezionato non valido.");
-	        }
-	
-	        Connection conn = DBManager.getConnection();
-	        String query = "INSERT INTO CONSEGNA (IDORDINE, IDFATTORINO, DATA_CONSEGNA) VALUES (?, ?, ?);";
-	
-	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-	            // Imposta i parametri della query
-	            stmt.setInt(1, ordineSelezionato.getIdOrdine());
-	            stmt.setInt(2, fattorinoSelezionato.getIdFattorino());
-	            stmt.setDate(3, dataOdierna);
-	
-	            // Esegui l'operazione di inserimento
-	            success = stmt.executeUpdate() > 0;
-	        } catch (SQLException e) {
-	            throw new DAOException("Errore durante la creazione della consegna: " + e.getMessage(), e);
-	        } finally {
-	            DBManager.closeConnection();
-	        }
-	    } catch (SQLException e) {
-	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
-	    }
-	
-	    return success;
-	}
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "INSERT INTO CONSEGNA (IDORDINE, IDFATTORINO, DATA) VALUES (?, ?, ?);";
 
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                // Imposta i parametri della query
+                stmt.setInt(1, GestioneOrdini.getOrdineSelezionato().getIdOrdine());
+                stmt.setInt(2, GestioneOrdini.getFattorinoSelezionato().getIdFattorino());
+                stmt.setDate(3, dataOdierna);
+
+                // Esegui l'operazione di inserimento
+                success = stmt.executeUpdate() > 0;
+
+                // Se la consegna è stata creata con successo, aggiorna lo stato dell'ordine
+                if (success) {
+                    boolean statoAggiornato = OrdineDAO.updateStatoOrdine(
+                        GestioneOrdini.getOrdineSelezionato().getIdOrdine(),
+                        "assegnato"
+                    );
+
+                    if (!statoAggiornato) {
+                        throw new DAOException("Errore durante l'aggiornamento dello stato dell'ordine.");
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore durante la creazione della consegna: " + e.getMessage(), e);
+            } finally {
+                DBManager.closeConnection();
+            }
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+        }
+
+        return success;
+    }
 }
-
-

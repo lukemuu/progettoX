@@ -76,11 +76,13 @@ public class BoundaryCooperativa {
             EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
  
             // Recupera la lista degli ordini dell'ultimo giorno
+            // AGGIORNO READORDINIULTIMOGIORNO PER CONTROLLARE CHE LO STATO SIA "CONFERMATO"
             List<EntityOrdine> ordini = OrdineDAO.readOrdiniUltimoGiorno();
             if (ordini.isEmpty()) {
                 System.out.println("Nessun ordine disponibile.");
                 return;
             }
+            
  
             System.out.println("Seleziona un ordine dall'elenco:");
             GestioneOrdini.mostraListaOrdini(ordini);
