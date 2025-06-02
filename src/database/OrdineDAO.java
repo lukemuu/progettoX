@@ -171,6 +171,37 @@ public class OrdineDAO {
         return ordini;
     }
     
+    //Fatta 02/06 da luca e pigi, controllare!!!
+	public static List<EntityOrdine> readOrdinibyPescheria(int idPescheria) throws DAOException, DBConnectionException {
+		List<EntityOrdine> ordini = new ArrayList<>();
+
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM ORDINE WHERE IDPESCHERIA=?;";
+
+			try {
+				PreparedStatement stmt = conn.prepareStatement(query);
+				stmt.setInt(1, idPescheria);
+				ResultSet result = stmt.executeQuery();
+
+				while (result.next()) {
+					EntityOrdine ordine = new EntityOrdine(result.getInt("IDRISTORANTE"), result.getInt("IDPESCHERIA"),
+							result.getInt("IDPRODOTTO"), result.getDate("DATA"), result.getDouble("QTA"));
+					ordini.add(ordine);
+				}
+			} catch (SQLException e) {
+				throw new DAOException("Errore lettura ordini per pescheria");
+			} finally {
+				DBManager.closeConnection();
+			}
+
+		} catch (SQLException e) {
+			throw new DBConnectionException("Errore di connessione DB");
+		}
+
+		return ordini;
+	}
+    
 
 	public static List<EntityOrdine> readOrdiniUltimaSettimana() throws DAOException, DBConnectionException {
 	    List<EntityOrdine> ordini = new ArrayList<>();
