@@ -73,8 +73,9 @@ public class BoundaryRistorante {
 	            }
 
 	            ArrayList<String> results = GestioneOrdini.getInstance().acquistaProdotto(idPescheria, idProdotto, quantita, idRistorante);
-
-	            System.out.println("Prezzo totale: " + results.get(0) + " euro");
+	            
+	            float prezzo = Float.parseFloat(results.get(0));
+	            System.out.println("Prezzo totale: " + prezzo + " euro");
 	            System.out.println("Digita 'S' per confermare o qualunque altro carattere per annullare..");
 	            String conferma = scan.nextLine();
 
@@ -85,12 +86,14 @@ public class BoundaryRistorante {
 	            }
 
 	            System.out.println("Ordine confermato con successo!");
-	            System.out.println("Prezzo totale: " + results.get(0) + " euro");
+	            System.out.println("Prezzo totale: " + prezzo + " euro");
 	            
 	            int idOrdine = Integer.parseInt(results.get(2));
+	           
 	            
 	            
-	            GestioneOrdini.getInstance().inviaOrdine(idPescheria, idProdotto, quantita,idOrdine);
+	            
+	            GestioneOrdini.getInstance().inviaOrdine(idPescheria, idProdotto, quantita,idOrdine, prezzo);
 
 	            
 	            //Assumo sempre vera la conferma da parte della pescheria

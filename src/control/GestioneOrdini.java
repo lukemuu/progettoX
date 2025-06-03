@@ -245,7 +245,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
         return prezzoUnitario * (float)quantita;
     }  
     
-    public void inviaOrdine(int idPescheria, int codProdotto, double quantita,int idOrdine) throws OperationException {
+    public void inviaOrdine(int idPescheria, int codProdotto, double quantita,int idOrdine,float prezzo) throws OperationException {
         try {
             // Recupera la pescheria in base all'ID
             EntityPescheria pescheria = PescheriaDAO.readPescheria(String.valueOf(idPescheria));
@@ -258,7 +258,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
             String emailPescheria = pescheria.getEmail();
 
             try {
-                emailService.inviaMail(emailPescheria, codProdotto, quantita,idOrdine);
+                emailService.inviaMail(emailPescheria, codProdotto, quantita,idOrdine,prezzo);
             } catch (MessagingException e) {
                 throw new OperationException("Errore durante l'invio dell'e-mail: " + e.getMessage());
             }

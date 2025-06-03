@@ -87,7 +87,7 @@ public void inviaReportOrdini(String destinatario, String nomePescheria, List<En
     Transport.send(message);
 }
 
-public void inviaMail(String emailPescheria, int codProdotto, double quantita,int idOrdine) throws MessagingException {
+public void inviaMail(String emailPescheria, int codProdotto, double quantita,int idOrdine,float prezzo) throws MessagingException {
     // Configurazione delle proprietà per il server SMTP
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
@@ -115,9 +115,11 @@ public void inviaMail(String emailPescheria, int codProdotto, double quantita,in
     corpoEmail.append("È stato effettuato un ordine con i seguenti dettagli:\n");
     corpoEmail.append("- ID Ordine: ").append(idOrdine).append("\n");
     corpoEmail.append("- Codice Prodotto: ").append(codProdotto).append("\n");
-    corpoEmail.append("- Quantità: ").append(quantita).append("\n\n");
+    corpoEmail.append("- Quantità: ").append(quantita).append("\n");
+    corpoEmail.append("- Prezzo: €").append(String.format("%.2f", prezzo)).append("\n\n");
     corpoEmail.append("Cordiali saluti,\nIl Team");
     message.setText(corpoEmail.toString());
+
 
     // Invio dell'email
     Transport.send(message);
