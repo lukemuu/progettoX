@@ -186,7 +186,7 @@ public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPesche
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, idPescheria);
-            stmt.setString(2, "In trattativa"); // Verifica che lo stato sia "In trattativa"
+            stmt.setString(2, "IN_TRATTATIVA"); // Verifica che lo stato sia "In trattativa"
             ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
@@ -215,12 +215,13 @@ public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPesche
 
     
 
-	public static List<EntityOrdine> readOrdiniUltimaSettimana() throws DAOException, DBConnectionException {
+	public static List<EntityOrdine> readOrdiniReport() throws DAOException, DBConnectionException {
 	    List<EntityOrdine> ordini = new ArrayList<>();
 	
 	    try {
 	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY);";
+	        String query = "SELECT * FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != 'IN_TRATTATIVA';";
+
 	
 	        try {
 	            PreparedStatement stmt = conn.prepareStatement(query);
