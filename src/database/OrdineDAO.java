@@ -34,7 +34,8 @@ public class OrdineDAO {
                         result.getInt("IDPESCHERIA"),
                         result.getInt("IDPRODOTTO"),
                         result.getDate("DATA"),
-                        result.getDouble("QTA")
+                        result.getDouble("QTA"),
+                        result.getFloat("PREZZO")
                     );
                 }
             } catch (SQLException e) {
@@ -154,7 +155,9 @@ public class OrdineDAO {
                         result.getInt("IDPESCHERIA"),
                         result.getInt("IDPRODOTTO"),
                         result.getDate("DATA"),
-                        result.getFloat("QTA")
+                        result.getFloat("QTA"),
+                        result.getFloat("PREZZO")
+                        
                     );
                     ordini.add(ordine);
                 }
@@ -172,35 +175,44 @@ public class OrdineDAO {
     }
     
     //Fatta 02/06 da luca e pigi, controllare!!!
-	public static List<EntityOrdine> readOrdinibyPescheria(int idPescheria) throws DAOException, DBConnectionException {
-		List<EntityOrdine> ordini = new ArrayList<>();
 
-		try {
-			Connection conn = DBManager.getConnection();
-			String query = "SELECT * FROM ORDINE WHERE IDPESCHERIA=?;";
+public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPescheria) throws DAOException, DBConnectionException {
+    List<EntityOrdine> ordini = new ArrayList<>();
 
-			try {
-				PreparedStatement stmt = conn.prepareStatement(query);
-				stmt.setInt(1, idPescheria);
-				ResultSet result = stmt.executeQuery();
+    try {
+        Connection conn = DBManager.getConnection();
+        String query = "SELECT * FROM ORDINE WHERE IDPESCHERIA=? AND STATO=?;";
 
-				while (result.next()) {
-					EntityOrdine ordine = new EntityOrdine(result.getInt("IDRISTORANTE"), result.getInt("IDPESCHERIA"),
-							result.getInt("IDPRODOTTO"), result.getDate("DATA"), result.getDouble("QTA"));
-					ordini.add(ordine);
-				}
-			} catch (SQLException e) {
-				throw new DAOException("Errore lettura ordini per pescheria");
-			} finally {
-				DBManager.closeConnection();
-			}
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, idPescheria);
+            stmt.setString(2, "In trattativa"); // Verifica che lo stato sia "In trattativa"
+            ResultSet result = stmt.executeQuery();
 
-		} catch (SQLException e) {
-			throw new DBConnectionException("Errore di connessione DB");
-		}
+            while (result.next()) {
+                EntityOrdine ordine = new EntityOrdine(
+                    result.getInt("IDRISTORANTE"),
+                    result.getInt("IDPESCHERIA"),
+                    result.getInt("IDPRODOTTO"),
+                    result.getDate("DATA"),
+                    result.getDouble("QTA"),
+                    result.getFloat("PREZZO")
+                );
+                ordini.add(ordine);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Errore lettura ordini per pescheria");
+        } finally {
+            DBManager.closeConnection();
+        }
 
-		return ordini;
-	}
+    } catch (SQLException e) {
+        throw new DBConnectionException("Errore di connessione DB");
+    }
+
+    return ordini;
+}
+
     
 
 	public static List<EntityOrdine> readOrdiniUltimaSettimana() throws DAOException, DBConnectionException {
@@ -220,7 +232,8 @@ public class OrdineDAO {
 	                    result.getInt("IDPESCHERIA"),
 	                    result.getInt("IDPRODOTTO"),
 	                    result.getDate("DATA"),
-	                    result.getDouble("QTA")
+	                    result.getDouble("QTA"),
+	                    result.getFloat("PREZZO")
 	                );
 	                ordini.add(ordine);
 	            }
@@ -254,7 +267,9 @@ public class OrdineDAO {
 	                    result.getInt("IDPESCHERIA"),
 	                    result.getInt("IDPRODOTTO"),
 	                    result.getDate("DATA"),
-	                    result.getDouble("QTA")
+	                    result.getDouble("QTA"),
+	                    result.getFloat("PREZZO")
+	                    
 	                );
 	                ordini.add(ordine);
 	            }

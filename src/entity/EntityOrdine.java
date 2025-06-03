@@ -18,9 +18,11 @@ public class EntityOrdine {
 	private double qta;
 	private double qtaAggiornata;
 	private String stato;
+	private float prezzo;
 	
 	
-	public EntityOrdine(int idRistorante, int idPescheria, int idProdotto, Date data, double qta) {
+	
+	public EntityOrdine(int idRistorante, int idPescheria, int idProdotto, Date data, double qta, float prezzo) {
 		
 		this.idOrdine = contatoreIdOrdine++; // Incrementa il contatore per ogni nuovo ordine
 		this.idRistorante = idRistorante;
@@ -29,6 +31,8 @@ public class EntityOrdine {
 		this.idProdotto = idProdotto;
 		this.qta = qta;
 		this.stato = "In trattativa";
+		this.prezzo = prezzo;		
+		
 	}
 	
 	public EntityOrdine() {
@@ -102,6 +106,14 @@ public class EntityOrdine {
 	
 	public void saveOrdine() throws DAOException, DBConnectionException {
 	    OrdineDAO.createOrdine(this);
+	}
+
+	public float getPrezzo() {
+		return prezzo;
+	}
+
+	public void setPrezzo(float prezzo) {
+		this.prezzo = prezzo;
 	}
 	
 

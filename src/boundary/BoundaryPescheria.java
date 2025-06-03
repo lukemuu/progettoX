@@ -1,3 +1,4 @@
+
 package boundary;
 
 import java.util.Scanner;
@@ -34,11 +35,26 @@ public class BoundaryPescheria {
 
     private static void modificaOrdine() {
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
+        int idPescheria = 0;
         int idOrdine = 0;
         int quantitaAggiornata = 0;
+        float nuovoPrezzo = 0.0f;
         boolean inputValido = false;
 
         try {
+            // Input ID pescheria
+            while (!inputValido) {
+                try {
+                    System.out.println("Inserisci l'ID della pescheria:");
+                    idPescheria = Integer.parseInt(scan.nextLine());
+                    inputValido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Errore, inserire un ID valido (numero intero).");
+                }
+            }
+
+            inputValido = false;
+
             // Input ID ordine
             while (!inputValido) {
                 try {
@@ -68,9 +84,27 @@ public class BoundaryPescheria {
                 }
             }
 
+            inputValido = false;
+
+            // Input nuovo prezzo
+            while (!inputValido) {
+                try {
+                    System.out.println("Inserisci il nuovo prezzo:");
+                    nuovoPrezzo = Float.parseFloat(scan.nextLine());
+
+                    if (nuovoPrezzo > 0) {
+                        inputValido = true;
+                    } else {
+                        System.out.println("Errore, il prezzo deve essere un valore positivo.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Errore, inserire un valore valido.");
+                }
+            }
+
             // Richiama il metodo del control
-            gestioneOrdini.modificaOrdine(idOrdine, quantitaAggiornata);
-            System.out.println("Quantità aggiornata con successo per l'ordine con ID: " + idOrdine);
+            gestioneOrdini.modificaOrdine(idPescheria, idOrdine, quantitaAggiornata, nuovoPrezzo);
+            System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
 
         } catch (OperationException oE) {
             System.out.println(oE.getMessage());
