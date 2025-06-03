@@ -56,7 +56,7 @@ public class OrdineDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            String query = "INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA, PREZZO) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -67,6 +67,7 @@ public class OrdineDAO {
                 stmt.setInt(5, ordine.getIdProdotto());
                 stmt.setDouble(6, ordine.getQta());
                 stmt.setDouble(7, ordine.getQtaAggiornata());
+                stmt.setFloat(8, ordine.getPrezzo());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
