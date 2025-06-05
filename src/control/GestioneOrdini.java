@@ -138,8 +138,6 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
     System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
 }
 
-
-
  
     public static void assegnaConsegna(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato)
             throws OperationException, DAOException, DBConnectionException {
@@ -162,23 +160,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
         // Stampa un riepilogo delle scelte selezionate
         stampaScelteSelezionate(ordineSelezionato, fattorinoSelezionato);
     }
-
-	    // Metodi per mostrare le liste
-    public static void mostraListaOrdini(List<EntityOrdine> listaOrdini) {
-        System.out.println("Lista degli ordini disponibili:");
-        for (int i = 0; i < listaOrdini.size(); i++) {
-            EntityOrdine ordine = listaOrdini.get(i);
-            System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
-        }
-    }
- 
-    public static void mostraListaFattorini(List<EntityFattorino> listaFattorini) {
-        System.out.println("Lista dei fattorini disponibili:");
-        for (int i = 0; i < listaFattorini.size(); i++) {
-            EntityFattorino fattorino = listaFattorini.get(i);
-            System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
-        }
-    }
+    
     // Metodi per salvare le scelte
     private static EntityOrdine ordineSelezionato;
     private static EntityFattorino fattorinoSelezionato;
@@ -200,7 +182,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
     }
 
  
-    public static void stampaScelteSelezionate(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato) {
+    private static void stampaScelteSelezionate(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato) {
         System.out.println("========================================");
         System.out.println("          Riepilogo Scelte Utente       ");
         System.out.println("========================================");
@@ -216,6 +198,8 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
  
         System.out.println("========================================");
     }
+    
+    
  
 	public ArrayList<String> acquistaProdotto(int idPescheria, int idProdotto, double quantita,int idRistorante) throws OperationException {
         EntityProdotto prodotto = null;

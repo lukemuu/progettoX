@@ -69,7 +69,12 @@ public class BoundaryCooperativa {
             }
  
             System.out.println("Seleziona un fattorino dall'elenco:");
-            GestioneOrdini.mostraListaFattorini(fattorini);
+            
+            System.out.println("Lista dei fattorini disponibili:");
+            for (int i = 0; i < fattorini.size(); i++) {
+                EntityFattorino fattorino = fattorini.get(i);
+                System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
+            }
  
             System.out.print("Inserisci il numero del fattorino selezionato: ");
             int sceltaFattorino = scanner.nextInt();
@@ -85,7 +90,12 @@ public class BoundaryCooperativa {
             
  
             System.out.println("Seleziona un ordine dall'elenco:");
-            GestioneOrdini.mostraListaOrdini(ordini);
+            
+            System.out.println("Lista degli ordini disponibili:");
+            for (int i = 0; i < ordini.size(); i++) {
+                EntityOrdine ordine = ordini.get(i);
+                System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
+            }
  
             System.out.print("Inserisci il numero dell'ordine selezionato: ");
             int sceltaOrdine = scanner.nextInt();
@@ -94,7 +104,7 @@ public class BoundaryCooperativa {
             // Passa le scelte a GestioneOrdini
             GestioneOrdini.assegnaConsegna(ordineSelezionato, fattorinoSelezionato);
  
-            System.out.println("Consegna assegnata con successo!");
+            System.out.println("Consegna assegnata con successo! ... Preso a carico " + ordineSelezionato + ". La consegna verrà effettuata da " + fattorinoSelezionato + " il prima possibile.");
  
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Selezione non valida. Riprova.");
