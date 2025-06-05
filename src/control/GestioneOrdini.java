@@ -291,22 +291,25 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
         }
     }
     
-    public void confermaOrdine(int idOrdine) throws OperationException {
-    	
-    	 try {
-    	        // Aggiorna lo stato dell'ordine a "Confermato"
-    	        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, "Confermato");
-    	        if (!statoAggiornato) {
-    	            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
-    	        }
-    	    } catch (DBConnectionException dbEx) {
-    	        throw new OperationException("Errore di connessione al database");
-    	    } catch (DAOException ex) {
-    	        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
-    	    }
-       
-        
-       
+
+public void confermaOrdine(int idOrdine) throws OperationException {
+    try {
+        // Converte la stringa "Confermato" nel valore dell'enum EntityOrdine.StatoOrdine
+        EntityOrdine.StatoOrdine statoConfermato = EntityOrdine.StatoOrdine.valueOf("CONFERMATO");
+
+        // Aggiorna lo stato dell'ordine a "Confermato"
+        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, statoConfermato);
+        if (!statoAggiornato) {
+            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
+        }
+    } catch (IllegalArgumentException e) {
+        throw new OperationException("Valore dello stato non valido: " + e.getMessage());
+    } catch (DBConnectionException dbEx) {
+        throw new OperationException("Errore di connessione al database");
+    } catch (DAOException ex) {
+        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
     }
+}
+
  
 }

@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import entity.EntityOrdine;
-import entity.EntityFattorino;
 import exception.DAOException;
 import exception.DBConnectionException;
 
@@ -33,7 +32,7 @@ public class ConsegnaDAO {
                 if (success) {
                     boolean statoAggiornato = OrdineDAO.updateStatoOrdine(
                         GestioneOrdini.getOrdineSelezionato().getIdOrdine(),
-                        "assegnato"
+                        EntityOrdine.StatoOrdine.ASSEGNATO // Conversione corretta
                     );
 
                     if (!statoAggiornato) {

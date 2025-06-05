@@ -17,10 +17,15 @@ public class EntityOrdine {
 	private Date data;
 	private double qta;
 	private double qtaAggiornata;
-	private String stato;
+	private StatoOrdine stato;
 	private float prezzo;
 	
-	
+	public enum StatoOrdine {
+		IN_TRATTATIVA, 
+		CONFERMATO,
+		ASSEGNATO,
+		CONSEGNATO
+	}
 	
 	public EntityOrdine(int idRistorante, int idPescheria, int idProdotto, Date data, double qta, float prezzo) {
 		
@@ -30,7 +35,7 @@ public class EntityOrdine {
 		this.data = data;
 		this.idProdotto = idProdotto;
 		this.qta = qta;
-		this.stato = "In trattativa";
+		this.stato = StatoOrdine.IN_TRATTATIVA; // Stato iniziale dell'ordine
 		this.prezzo = prezzo;		
 		
 	}
@@ -96,11 +101,11 @@ public class EntityOrdine {
 		this.qtaAggiornata = qtaAggiornata;
 	}
 	
-	public String getStato() {
+	public StatoOrdine getStato() {
 		return stato;
 	}
 	
-	public void setStato(String stato) {
+	public void setStato(StatoOrdine stato) {
 		this.stato = stato;
 	}
 	

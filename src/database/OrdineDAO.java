@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import entity.EntityOrdine;
+import entity.EntityOrdine.StatoOrdine;
 import exception.DAOException;
 import exception.DBConnectionException;
 
@@ -37,6 +37,7 @@ public class OrdineDAO {
                         result.getDouble("QTA"),
                         result.getFloat("PREZZO")
                     );
+                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
                 }
             } catch (SQLException e) {
                 throw new DAOException("Errore lettura ordine");
@@ -56,7 +57,7 @@ public class OrdineDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA, PREZZO) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            String query = "INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA, PREZZO, STATO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -68,6 +69,7 @@ public class OrdineDAO {
                 stmt.setDouble(6, ordine.getQta());
                 stmt.setDouble(7, ordine.getQtaAggiornata());
                 stmt.setFloat(8, ordine.getPrezzo());
+                stmt.setString(9, ordine.getStato().name());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -88,7 +90,7 @@ public class OrdineDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "UPDATE ORDINE SET IDRISTORANTE=?, IDPESCHERIA=?, DATA=?, IDPRODOTTO=?, QTA=?, QTAAGGIORNATA=? WHERE IDORDINE=?;";
+            String query = "UPDATE ORDINE SET IDRISTORANTE=?, IDPESCHERIA=?, DATA=?, IDPRODOTTO=?, QTA=?, QTAAGGIORNATA=?, STATO=? WHERE IDORDINE=?;";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -98,7 +100,8 @@ public class OrdineDAO {
                 stmt.setInt(4, ordine.getIdProdotto());
                 stmt.setDouble(5, ordine.getQta());
                 stmt.setDouble(6, ordine.getQtaAggiornata());
-                stmt.setInt(7, ordine.getIdOrdine());
+                stmt.setString(7, ordine.getStato().name());
+                stmt.setInt(8, ordine.getIdOrdine());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -156,10 +159,10 @@ public class OrdineDAO {
                         result.getInt("IDPESCHERIA"),
                         result.getInt("IDPRODOTTO"),
                         result.getDate("DATA"),
-                        result.getFloat("QTA"),
+                        result.getDouble("QTA"),
                         result.getFloat("PREZZO")
-                        
                     );
+                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
                     ordini.add(ordine);
                 }
             } catch (SQLException e) {
@@ -174,142 +177,138 @@ public class OrdineDAO {
 
         return ordini;
     }
-    
-    //Fatta 02/06 da luca e pigi, controllare!!!
 
-public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPescheria) throws DAOException, DBConnectionException {
-    List<EntityOrdine> ordini = new ArrayList<>();
-
-    try {
-        Connection conn = DBManager.getConnection();
-        String query = "SELECT * FROM ORDINE WHERE IDPESCHERIA=? AND STATO=?;";
+    public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPescheria) throws DAOException, DBConnectionException {
+        List<EntityOrdine> ordini = new ArrayList<>();
 
         try {
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, idPescheria);
-            stmt.setString(2, "IN_TRATTATIVA"); // Verifica che lo stato sia "In trattativa"
-            ResultSet result = stmt.executeQuery();
+            Connection conn = DBManager.getConnection();
+            String query = "SELECT * FROM ORDINE WHERE IDPESCHERIA=? AND STATO=?;";
 
-            while (result.next()) {
-                EntityOrdine ordine = new EntityOrdine(
-                    result.getInt("IDRISTORANTE"),
-                    result.getInt("IDPESCHERIA"),
-                    result.getInt("IDPRODOTTO"),
-                    result.getDate("DATA"),
-                    result.getDouble("QTA"),
-                    result.getFloat("PREZZO")
-                );
-                ordini.add(ordine);
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, idPescheria);
+                stmt.setString(2, StatoOrdine.IN_TRATTATIVA.name());
+                ResultSet result = stmt.executeQuery();
+
+                while (result.next()) {
+                    EntityOrdine ordine = new EntityOrdine(
+                        result.getInt("IDRISTORANTE"),
+                        result.getInt("IDPESCHERIA"),
+                        result.getInt("IDPRODOTTO"),
+                        result.getDate("DATA"),
+                        result.getDouble("QTA"),
+                        result.getFloat("PREZZO")
+                    );
+                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
+                    ordini.add(ordine);
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore lettura ordini per pescheria");
+            } finally {
+                DBManager.closeConnection();
             }
+
         } catch (SQLException e) {
-            throw new DAOException("Errore lettura ordini per pescheria");
-        } finally {
-            DBManager.closeConnection();
+            throw new DBConnectionException("Errore di connessione DB");
         }
 
-    } catch (SQLException e) {
-        throw new DBConnectionException("Errore di connessione DB");
+        return ordini;
     }
 
-    return ordini;
+    public static List<EntityOrdine> readOrdiniReport() throws DAOException, DBConnectionException {
+        List<EntityOrdine> ordini = new ArrayList<>();
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "SELECT * FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != ?;";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, StatoOrdine.IN_TRATTATIVA.name());
+                ResultSet result = stmt.executeQuery();
+
+                while (result.next()) {
+                    EntityOrdine ordine = new EntityOrdine(
+                        result.getInt("IDRISTORANTE"),
+                        result.getInt("IDPESCHERIA"),
+                        result.getInt("IDPRODOTTO"),
+                        result.getDate("DATA"),
+                        result.getDouble("QTA"),
+                        result.getFloat("PREZZO")
+                    );
+                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
+                    ordini.add(ordine);
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore lettura ordini dell'ultima settimana");
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione DB");
+        }
+
+        return ordini;
+    }
+
+    public static List<EntityOrdine> readOrdiniUltimoGiorno() throws DAOException, DBConnectionException {
+        List<EntityOrdine> ordini = new ArrayList<>();
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = ?;";
+
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet result = stmt.executeQuery()) {
+                stmt.setString(1, StatoOrdine.CONFERMATO.name());
+
+                while (result.next()) {
+                    EntityOrdine ordine = new EntityOrdine(
+                        result.getInt("IDRISTORANTE"),
+                        result.getInt("IDPESCHERIA"),
+                        result.getInt("IDPRODOTTO"),
+                        result.getDate("DATA"),
+                        result.getDouble("QTA"),
+                        result.getFloat("PREZZO")
+                    );
+                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
+                    ordini.add(ordine);
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Errore lettura ordini dell'ultimo giorno: " + e.getMessage(), e);
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+        }
+
+        return ordini;
+    }
+
+    public static boolean updateStatoOrdine(int idOrdine, StatoOrdine nuovoStato) throws DAOException, DBConnectionException {
+        boolean success = false;
+
+        try {
+            Connection conn = DBManager.getConnection();
+            String query = "UPDATE ORDINE SET STATO=? WHERE IDORDINE=?;";
+
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, nuovoStato.name());
+                stmt.setInt(2, idOrdine);
+
+                success = stmt.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new DAOException("Errore aggiornamento stato ordine: " + e.getMessage(), e);
+            } finally {
+                DBManager.closeConnection();
+            }
+
+        } catch (SQLException e) {
+            throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+        }
+
+        return success;
+    }
 }
-
-    
-
-	public static List<EntityOrdine> readOrdiniReport() throws DAOException, DBConnectionException {
-	    List<EntityOrdine> ordini = new ArrayList<>();
-	
-	    try {
-	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != 'IN_TRATTATIVA';";
-
-	
-	        try {
-	            PreparedStatement stmt = conn.prepareStatement(query);
-	            ResultSet result = stmt.executeQuery();
-	
-	            while (result.next()) {
-	                EntityOrdine ordine = new EntityOrdine(
-	                    result.getInt("IDRISTORANTE"),
-	                    result.getInt("IDPESCHERIA"),
-	                    result.getInt("IDPRODOTTO"),
-	                    result.getDate("DATA"),
-	                    result.getDouble("QTA"),
-	                    result.getFloat("PREZZO")
-	                );
-	                ordini.add(ordine);
-	            }
-	        } catch (SQLException e) {
-	            throw new DAOException("Errore lettura ordini dell'ultima settimana");
-	        } finally {
-	            DBManager.closeConnection();
-	        }
-	
-	    } catch (SQLException e) {
-	        throw new DBConnectionException("Errore di connessione DB");
-	    }
-	
-	    return ordini;
-	}
-	
-
-	public static List<EntityOrdine> readOrdiniUltimoGiorno() throws DAOException, DBConnectionException {
-	    List<EntityOrdine> ordini = new ArrayList<>();
-	    // Modifica la query per selezionare solo gli ordini confermati dell'ultimo giorno
-	    try {
-	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = 'CONFERMATO';";
-	
-	        try (PreparedStatement stmt = conn.prepareStatement(query);
-	             ResultSet result = stmt.executeQuery()) {
-	
-	            while (result.next()) {
-	                EntityOrdine ordine = new EntityOrdine(
-	                    result.getInt("IDRISTORANTE"),
-	                    result.getInt("IDPESCHERIA"),
-	                    result.getInt("IDPRODOTTO"),
-	                    result.getDate("DATA"),
-	                    result.getDouble("QTA"),
-	                    result.getFloat("PREZZO")
-	                    
-	                );
-	                ordini.add(ordine);
-	            }
-	        } catch (SQLException e) {
-	            throw new DAOException("Errore lettura ordini dell'ultimo giorno: " + e.getMessage(), e);
-	        }
-	
-	    } catch (SQLException e) {
-	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
-	    }
-	
-	    return ordini;
-	}
-
-	
-	public static boolean updateStatoOrdine(int idOrdine, String nuovoStato) throws DAOException, DBConnectionException {
-	    boolean success = false;
-
-	    try {
-	        Connection conn = DBManager.getConnection();
-	        String query = "UPDATE ORDINE SET STATO=? WHERE IDORDINE=?;";
-
-	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-	            stmt.setString(1, nuovoStato);
-	            stmt.setInt(2, idOrdine);
-
-	            success = stmt.executeUpdate() > 0;
-	        } catch (SQLException e) {
-	            throw new DAOException("Errore aggiornamento stato ordine: " + e.getMessage(), e);
-	        } finally {
-	            DBManager.closeConnection();
-	        }
-
-	    } catch (SQLException e) {
-	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
-	    }
-
-	    return success;
-	}
-}
-

@@ -1,3 +1,4 @@
+
 package database;
 
 import java.sql.Connection;
@@ -6,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import entity.EntityFattorino;
+import entity.EntityFattorino.StatoFattorino;
 import exception.DAOException;
 import exception.DBConnectionException;
 
@@ -28,7 +30,11 @@ public class FattorinoDAO {
                 ResultSet result = stmt.executeQuery();
 
                 if (result.next()) {
-                    fattorino = new EntityFattorino(result.getString("NOME"), result.getString("USERNAME"), result.getString("PASSWORD"));
+                    fattorino = new EntityFattorino(
+                        result.getString("NOME"),
+                        result.getString("USERNAME"),
+                        result.getString("PASSWORD")
+                    );
                 }
             } catch (SQLException e) {
                 throw new DAOException("Errore lettura fattorino");
@@ -48,7 +54,7 @@ public class FattorinoDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD, STATO) VALUES (?, ?, ? , ?, ? );";
+            String query = "INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD, STATO) VALUES (?, ?, ?, ?, ?);";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -56,8 +62,7 @@ public class FattorinoDAO {
                 stmt.setString(2, fattorino.getNome());
                 stmt.setString(3, fattorino.getUsername());
                 stmt.setString(4, fattorino.getPassword());
-                stmt.setString(5, fattorino.getStato());
-                
+                stmt.setString(5, fattorino.getStato().name()); // Conversione corretta
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -78,16 +83,15 @@ public class FattorinoDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "UPDATE FATTORINO SET IDFATTORINO=?, NOME=?, USERNAME =?, PASSWORD =?, STATO =?,   WHERE IDFATTORINO=?;"; //IDFATTORINO chiave primaria
+            String query = "UPDATE FATTORINO SET NOME=?, USERNAME=?, PASSWORD=?, STATO=? WHERE IDFATTORINO=?;";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, fattorino.getIdFattorino());
-                stmt.setString(2, fattorino.getNome());
-                stmt.setString(3, fattorino.getUsername());
-                stmt.setString(4, fattorino.getPassword());
-                stmt.setString(5, fattorino.getStato());
-                
+                stmt.setString(1, fattorino.getNome());
+                stmt.setString(2, fattorino.getUsername());
+                stmt.setString(3, fattorino.getPassword());
+                stmt.setString(4, fattorino.getStato().name()); // Conversione corretta
+                stmt.setInt(5, fattorino.getIdFattorino());
 
                 success = stmt.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -103,40 +107,17 @@ public class FattorinoDAO {
         return success;
     }
 
-    public static boolean deleteFattorino(int idFattorino) throws DAOException, DBConnectionException {
-        boolean success = false;
-
-        try {
-            Connection conn = DBManager.getConnection();
-            String query = "DELETE FROM FATTORINO WHERE IDFATTORINO=?;";
-
-            try {
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, idFattorino);
-
-                success = stmt.executeUpdate() > 0;
-            } catch (SQLException e) {
-                throw new DAOException("Errore eliminazione fattorino");
-            } finally {
-                DBManager.closeConnection();
-            }
-
-        } catch (SQLException e) {
-            throw new DBConnectionException("Errore di connessione DB");
-        }
-
-        return success;
-    }
-    
     public static List<EntityFattorino> readAllFattorini() throws DAOException, DBConnectionException {
         List<EntityFattorino> fattorini = new ArrayList<>();
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "SELECT * FROM FATTORINO WHERE STATO = 'DISPONIBILE';";
+            String query = "SELECT * FROM FATTORINO WHERE STATO=?;";
 
-            try (PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet result = stmt.executeQuery()) {
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, StatoFattorino.DISPONIBILE.name()); // Conversione corretta
+                ResultSet result = stmt.executeQuery();
 
                 while (result.next()) {
                     EntityFattorino fattorino = new EntityFattorino(
@@ -155,5 +136,4 @@ public class FattorinoDAO {
 
         return fattorini;
     }
-    
 }
