@@ -258,7 +258,7 @@ public static List<EntityOrdine> readOrdinibyPescheria_inTrattativa(int idPesche
 	    // Modifica la query per selezionare solo gli ordini confermati dell'ultimo giorno
 	    try {
 	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = 'confermato';";
+	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = 'CONFERMATO';";
 	
 	        try (PreparedStatement stmt = conn.prepareStatement(query);
 	             ResultSet result = stmt.executeQuery()) {

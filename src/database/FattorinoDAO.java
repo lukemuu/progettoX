@@ -133,7 +133,7 @@ public class FattorinoDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "SELECT * FROM FATTORINO;";
+            String query = "SELECT * FROM FATTORINO WHERE STATO = 'DISPONIBILE';";
 
             try (PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet result = stmt.executeQuery()) {
