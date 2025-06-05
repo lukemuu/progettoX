@@ -36,108 +36,159 @@ public class GestioneOrdini {
  
 		return gO; 
 	}
+
+	public void inviaReport() {
+	    try {
+	        // Ottieni la lista delle pescherie
+	        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
 	
-
-
-public void inviaReport() {
-    try {
-        // Ottieni la lista delle pescherie
-        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-
-        // Controlla se non ci sono pescherie
-        if (listaPescherie == null || listaPescherie.isEmpty()) {
-            System.err.println("Errore: Nessuna pescheria trovata. Il report non può essere inviato.");
-            return;
-        }
-
-        // Ottieni la lista degli ordini degli ultimi 7 giorni
-        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
-
-        // Configura il servizio email
-        EmailService emailService = new EmailService();
-
-        // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
-        for (EntityPescheria pescheria : listaPescherie) {
-            String email = pescheria.getEmail();
-            String nomePescheria = pescheria.getNome();
-            int idPescheria = pescheria.getIdPescheria();
-
-            // Filtra gli ordini per questa pescheria
-            List<EntityOrdine> ordiniPescheria = listaOrdini.stream()
-                    .filter(ordine -> ordine.getIdPescheria() == idPescheria)
-                    .toList();
-
-            try {
-                if (ordiniPescheria.isEmpty()) {
-                    // Invia report vuoto
-                    emailService.inviaReportVuoto(email, nomePescheria);
-                } else {
-                    // Invia report con ordini
-                    emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
-                }
-                System.out.println("Report inviato a: " + email + " (" + nomePescheria + ")");
-            } catch (MessagingException e) {
-                System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
-            }
-        }
-    } catch (DAOException | DBConnectionException e) {
-        System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
-    }
-}
+	        // Controlla se non ci sono pescherie
+	        if (listaPescherie == null || listaPescherie.isEmpty()) {
+	            System.err.println("Errore: Nessuna pescheria trovata. Il report non può essere inviato.");
+	            return;
+	        }
+	
+	        // Ottieni la lista degli ordini degli ultimi 7 giorni
+	        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
+	
+	        // Configura il servizio email
+	        EmailService emailService = new EmailService();
+	
+	        // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
+	        for (EntityPescheria pescheria : listaPescherie) {
+	            String email = pescheria.getEmail();
+	            String nomePescheria = pescheria.getNome();
+	            int idPescheria = pescheria.getIdPescheria();
+	
+	            // Filtra gli ordini per questa pescheria
+	            List<EntityOrdine> ordiniPescheria = listaOrdini.stream()
+	                    .filter(ordine -> ordine.getIdPescheria() == idPescheria)
+	                    .toList();
+	
+	            try {
+	                if (ordiniPescheria.isEmpty()) {
+	                    // Invia report vuoto
+	                    emailService.inviaReportVuoto(email, nomePescheria);
+	                } else {
+	                    // Invia report con ordini
+	                    emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
+	                }
+	                System.out.println("Report inviato a: " + email + " (" + nomePescheria + ")");
+	            } catch (MessagingException e) {
+	                System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
+	            }
+	        }
+	    } catch (DAOException | DBConnectionException e) {
+	        System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
+	    }
+	}
 
 
  
     
 
 
-public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+	public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+	
+	    if (idPescheria <= 0) {
+	        throw new OperationException("L'ID della pescheria deve essere un numero positivo.");
+	    }
+	
+	    if (idOrdine <= 0) {
+	        throw new OperationException("L'ID dell'ordine deve essere un numero positivo.");
+	    }
+	
+	    if (quantitaAggiornata <= 0) {
+	        throw new OperationException("La quantità aggiornata deve essere un numero positivo.");
+	    }
+	
+	    if (nuovoPrezzo <= 0) {
+	        throw new OperationException("Il nuovo prezzo deve essere un valore positivo.");
+	    }
+	
+	    // Recupera la lista degli ordini in trattativa per la pescheria specificata
+	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
+	
+	    // Cerca l'ordine con l'ID specificato
+	    EntityOrdine ordineDaModificare = null;
+	    for (EntityOrdine ordine : listaOrdini) {
+	        if (ordine.getIdOrdine() == idOrdine) {
+	            ordineDaModificare = ordine;
+	            break;
+	        }
+	    }
+	
+	    if (ordineDaModificare == null) {
+	        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
+	    }
+	
+	    // Aggiorna la quantità e il prezzo nell'oggetto ordine
+	    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
+	    ordineDaModificare.setPrezzo(nuovoPrezzo);
+	
+	    // Aggiorna l'ordine nel database
+	    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
+	
+	    if (!successo) {
+	        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
+	    }
+	
+	    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
+	}
 
-    if (idPescheria <= 0) {
-        throw new OperationException("L'ID della pescheria deve essere un numero positivo.");
-    }
-
-    if (idOrdine <= 0) {
-        throw new OperationException("L'ID dell'ordine deve essere un numero positivo.");
-    }
-
-    if (quantitaAggiornata <= 0) {
-        throw new OperationException("La quantità aggiornata deve essere un numero positivo.");
-    }
-
-    if (nuovoPrezzo <= 0) {
-        throw new OperationException("Il nuovo prezzo deve essere un valore positivo.");
-    }
-
-    // Recupera la lista degli ordini in trattativa per la pescheria specificata
-    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
-
-    // Cerca l'ordine con l'ID specificato
-    EntityOrdine ordineDaModificare = null;
-    for (EntityOrdine ordine : listaOrdini) {
-        if (ordine.getIdOrdine() == idOrdine) {
-            ordineDaModificare = ordine;
-            break;
-        }
-    }
-
-    if (ordineDaModificare == null) {
-        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
-    }
-
-    // Aggiorna la quantità e il prezzo nell'oggetto ordine
-    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
-    ordineDaModificare.setPrezzo(nuovoPrezzo);
-
-    // Aggiorna l'ordine nel database
-    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
-
-    if (!successo) {
-        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
-    }
-
-    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
-}
-
+	
+	public static List<EntityFattorino> stampaListaFattorini() {
+		
+	    List<EntityFattorino> fattorini = new ArrayList<>();
+	    
+	    try {
+	        // Recupera la lista di tutti i fattorini
+	        fattorini = FattorinoDAO.readAllFattorini();
+	        
+	        System.out.println("========================================");
+	        
+	        if (fattorini.isEmpty()) {
+	            System.out.println("Nessun fattorino disponibile.");
+	        }
+	        
+	        System.out.println("========================================");
+	        
+	    } catch (DBConnectionException e) {
+	        System.out.println("Errore di connessione al database: " + e.getMessage());
+	        fattorini = new ArrayList<>(); // Ritorna lista vuota in caso di errore
+	    } catch (DAOException e) {
+	        System.out.println("Errore durante il recupero dei dati: " + e.getMessage());
+	        fattorini = new ArrayList<>(); // Ritorna lista vuota in caso di errore
+	    }
+	    
+	    return fattorini;
+	}
+	
+	public static List<EntityOrdine> stampaListaOrdini() {
+		
+		List<EntityOrdine> ordini = new ArrayList<>();
+		
+		try {
+			ordini = OrdineDAO.readOrdiniUltimoGiorno();
+			
+			System.out.println("========================================");
+			
+	        if (ordini.isEmpty()) {
+	            System.out.println("Nessun ordine disponibile.");
+	        }
+	        
+	        System.out.println("========================================");
+	        
+		} catch (DBConnectionException e) {
+			System.out.println("Errore di connessione al database: " + e.getMessage());
+			ordini = new ArrayList<>();
+		} catch (DAOException e) {
+			System.out.println("Errore durante il recupero dei dati: " + e.getMessage());
+			ordini = new ArrayList<>();
+		}	
+		
+        return ordini;
+	}
  
     public static void assegnaConsegna(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato)
             throws OperationException, DAOException, DBConnectionException {

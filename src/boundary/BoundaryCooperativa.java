@@ -60,42 +60,27 @@ public class BoundaryCooperativa {
 	public static void assegnaConsegna() {
         Scanner scanner = new Scanner(System.in);
  
-        try {
-            // Recupera la lista di tutti i fattorini
-            List<EntityFattorino> fattorini = FattorinoDAO.readAllFattorini();
-            if (fattorini.isEmpty()) {
-                System.out.println("Nessun fattorino disponibile.");
-                return;
-            }
- 
-            System.out.println("Seleziona un fattorino dall'elenco:");
-            
-            System.out.println("Lista dei fattorini disponibili:");
-            for (int i = 0; i < fattorini.size(); i++) {
-                EntityFattorino fattorino = fattorini.get(i);
-                System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
-            }
- 
+        try { 
+        	
+        	List<EntityFattorino> fattorini = GestioneOrdini.stampaListaFattorini();
+        	
+        	System.out.println("Seleziona un fattorino dall'elenco:");
+	        for (int i = 0; i < fattorini.size(); i++) {
+	            EntityFattorino fattorino = fattorini.get(i);
+	            System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
+	        }
+	       
             System.out.print("Inserisci il numero del fattorino selezionato: ");
             int sceltaFattorino = scanner.nextInt();
             EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
- 
-            // Recupera la lista degli ordini dell'ultimo giorno
-            // AGGIORNO READORDINIULTIMOGIORNO PER CONTROLLARE CHE LO STATO SIA "CONFERMATO"
-            List<EntityOrdine> ordini = OrdineDAO.readOrdiniUltimoGiorno();
-            if (ordini.isEmpty()) {
-                System.out.println("Nessun ordine disponibile.");
-                return;
-            }
             
- 
+            List<EntityOrdine> ordini = GestioneOrdini.stampaListaOrdini();
+            
             System.out.println("Seleziona un ordine dall'elenco:");
-            
-            System.out.println("Lista degli ordini disponibili:");
-            for (int i = 0; i < ordini.size(); i++) {
-                EntityOrdine ordine = ordini.get(i);
-                System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
-            }
+	        for (int i = 0; i < ordini.size(); i++) {
+	            EntityOrdine ordine = ordini.get(i);
+	            System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
+	        }
  
             System.out.print("Inserisci il numero dell'ordine selezionato: ");
             int sceltaOrdine = scanner.nextInt();
@@ -106,15 +91,17 @@ public class BoundaryCooperativa {
  
             System.out.println("Consegna assegnata con successo! ... Preso a carico " + ordineSelezionato + ". La consegna verrà effettuata da " + fattorinoSelezionato + " il prima possibile.");
  
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Selezione non valida. Riprova.");
-        } catch (DAOException | DBConnectionException e) {
-            System.out.println("Errore durante il recupero dei dati: " + e.getMessage());
-        } catch (OperationException e) {
-            System.out.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
-        } finally {
-            scanner.close();
-        }
+		} catch (DAOException e) {
+			System.err.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
+		} catch (OperationException e) {
+			System.err.println("Errore nell'operazione: " + e.getMessage());
+		} catch (DBConnectionException e) {
+			System.err.println("Errore di connessione al database: " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Errore imprevisto: " + e.getMessage());
+		} finally {
+			scanner.close();
+		}
     }
  
 }
