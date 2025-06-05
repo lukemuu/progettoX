@@ -50,25 +50,51 @@ public class BoundaryRistorante {
 	            int idRistorante = 1; // Aggiunto per identificare il ristorante
 	            boolean inputValido = false;
 
+	            
 	            while (!inputValido) {
 	                try {
-	                    System.out.println("Inserisci l'ID della pescheria");
+	                    System.out.println("Inserisci l'ID della pescheria:");
 	                    idPescheria = Integer.parseInt(scan.nextLine());
 
-	                    System.out.println("Inserisci l'ID del prodotto");
+	                    if (idPescheria > 0) {
+	                        inputValido = true;
+	                    } else {
+	                        System.out.println("Errore: l'ID della pescheria deve essere un intero positivo. Riprovare.");
+	                    }
+	                } catch (NumberFormatException nE) {
+	                    System.out.println("Errore: inserire un numero valido per l'ID della pescheria. Riprovare.");
+	                }
+	            }
+
+	            inputValido = false;
+	            while (!inputValido) {
+	                try {
+	                    System.out.println("Inserisci l'ID del prodotto:");
 	                    idProdotto = Integer.parseInt(scan.nextLine());
 
-	                    System.out.println("Inserisci la quantità del prodotto");
+	                    if (idProdotto > 0) {
+	                        inputValido = true;
+	                    } else {
+	                        System.out.println("Errore: l'ID del prodotto deve essere un intero positivo. Riprovare.");
+	                    }
+	                } catch (NumberFormatException nE) {
+	                    System.out.println("Errore: inserire un numero valido per l'ID del prodotto. Riprovare.");
+	                }
+	            }
+
+	            inputValido = false;
+	            while (!inputValido) {
+	                try {
+	                    System.out.println("Inserisci la quantità del prodotto:");
 	                    quantita = Integer.parseInt(scan.nextLine());
 
-	                    if (idPescheria <= 0 || idProdotto <= 0 || quantita <= 0) {
-	                        throw new IllegalArgumentException("I valori devono essere positivi.");
+	                    if (quantita > 0) {
+	                        inputValido = true;
+	                    } else {
+	                        System.out.println("Errore: la quantità deve essere un intero positivo. Riprovare.");
 	                    }
-
-	                    inputValido = true;
-	                } catch (IllegalArgumentException e) {
-	                    System.out.println("Errore nell'acquisizione dei dati, riprovare..");
-	                    System.out.println();
+	                } catch (NumberFormatException nE) {
+	                    System.out.println("Errore: inserire un numero valido per la quantità. Riprovare.");
 	                }
 	            }
 
