@@ -10,7 +10,8 @@ public class TestConnection {
 
     public static void main(String[] args) {
         System.out.println("=== TEST CONNESSIONE DATABASE ===");
-
+        
+     
         try {
             // Test connessione
             Connection conn = DBManager.getConnection();
