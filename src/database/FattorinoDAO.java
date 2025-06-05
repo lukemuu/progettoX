@@ -48,7 +48,7 @@ public class FattorinoDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD) VALUES (?, ?, ? , ? );";
+            String query = "INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD, STATO) VALUES (?, ?, ? , ?, ? );";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -56,6 +56,7 @@ public class FattorinoDAO {
                 stmt.setString(2, fattorino.getNome());
                 stmt.setString(3, fattorino.getUsername());
                 stmt.setString(4, fattorino.getPassword());
+                stmt.setString(5, fattorino.getStato());
                 
 
                 success = stmt.executeUpdate() > 0;
@@ -77,7 +78,7 @@ public class FattorinoDAO {
 
         try {
             Connection conn = DBManager.getConnection();
-            String query = "UPDATE FATTORINO SET IDFATTORINO=?, NOME=?, USERNAME =?, PASSWORD =?,   WHERE IDFATTORINO=?;"; //IDFATTORINO chiave primaria
+            String query = "UPDATE FATTORINO SET IDFATTORINO=?, NOME=?, USERNAME =?, PASSWORD =?, STATO =?,   WHERE IDFATTORINO=?;"; //IDFATTORINO chiave primaria
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -85,7 +86,7 @@ public class FattorinoDAO {
                 stmt.setString(2, fattorino.getNome());
                 stmt.setString(3, fattorino.getUsername());
                 stmt.setString(4, fattorino.getPassword());
-                
+                stmt.setString(5, fattorino.getStato());
                 
 
                 success = stmt.executeUpdate() > 0;

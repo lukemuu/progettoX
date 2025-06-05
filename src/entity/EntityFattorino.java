@@ -8,6 +8,7 @@ public class EntityFattorino {
 	private String nome;
 	private String username;
 	private String password;
+	private String stato; // Stato del fattorino (es. "disponibile", "occupato", etc.)
 	
 	public EntityFattorino() {
 
@@ -19,6 +20,7 @@ public class EntityFattorino {
 		this.nome = nome;
 		this.username = username;
 		this.password = password;
+		this.stato = "disponibile"; // Stato iniziale del fattorino
 	}
 
 	public int getIdFattorino() {
@@ -51,6 +53,14 @@ public class EntityFattorino {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
 	}
 
 }

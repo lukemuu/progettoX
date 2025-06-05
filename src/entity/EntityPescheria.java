@@ -2,6 +2,14 @@ package entity;
  
 public class EntityPescheria {
 	
+	private static int contatoreIdPescheria = 1; 
+
+	private int idPescheria;
+	private String nome;
+	private String indirizzo;
+	private String email;
+	private String username;
+	private String password;
 	
 	public EntityPescheria(String nome, String indirizzo, String email, String username, String password) {
 		
@@ -15,17 +23,6 @@ public class EntityPescheria {
 	
 	public EntityPescheria() {
 	}
-	
-	private static int contatoreIdPescheria = 1; 
-
-	private int idPescheria;
-	private String nome;
-	private String indirizzo;
-	private String email;
-	private String username;
-	private String password;
-	
-	
 	
 	public int getIdPescheria() {
 		return idPescheria;
