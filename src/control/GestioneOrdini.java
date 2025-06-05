@@ -88,53 +88,39 @@ public class GestioneOrdini {
     
 
 
-	public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
-	
-	    if (idPescheria <= 0) {
-	        throw new OperationException("L'ID della pescheria deve essere un numero positivo.");
-	    }
-	
-	    if (idOrdine <= 0) {
-	        throw new OperationException("L'ID dell'ordine deve essere un numero positivo.");
-	    }
-	
-	    if (quantitaAggiornata <= 0) {
-	        throw new OperationException("La quantità aggiornata deve essere un numero positivo.");
-	    }
-	
-	    if (nuovoPrezzo <= 0) {
-	        throw new OperationException("Il nuovo prezzo deve essere un valore positivo.");
-	    }
-	
-	    // Recupera la lista degli ordini in trattativa per la pescheria specificata
-	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
-	
-	    // Cerca l'ordine con l'ID specificato
-	    EntityOrdine ordineDaModificare = null;
-	    for (EntityOrdine ordine : listaOrdini) {
-	        if (ordine.getIdOrdine() == idOrdine) {
-	            ordineDaModificare = ordine;
-	            break;
-	        }
-	    }
-	
-	    if (ordineDaModificare == null) {
-	        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
-	    }
-	
-	    // Aggiorna la quantità e il prezzo nell'oggetto ordine
-	    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
-	    ordineDaModificare.setPrezzo(nuovoPrezzo);
-	
-	    // Aggiorna l'ordine nel database
-	    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
-	
-	    if (!successo) {
-	        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
-	    }
-	
-	    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
-	}
+
+public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+
+    // Recupera la lista degli ordini in trattativa per la pescheria specificata
+    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
+
+    // Cerca l'ordine con l'ID specificato
+    EntityOrdine ordineDaModificare = null;
+    for (EntityOrdine ordine : listaOrdini) {
+        if (ordine.getIdOrdine() == idOrdine) {
+            ordineDaModificare = ordine;
+            break;
+        }
+    }
+
+    if (ordineDaModificare == null) {
+        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
+    }
+
+    // Aggiorna la quantità e il prezzo nell'oggetto ordine
+    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
+    ordineDaModificare.setPrezzo(nuovoPrezzo);
+
+    // Aggiorna l'ordine nel database
+    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
+
+    if (!successo) {
+        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
+    }
+
+    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
+}
+
 
 	
 	public static List<EntityFattorino> stampaListaFattorini() {

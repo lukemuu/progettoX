@@ -46,7 +46,11 @@ public class BoundaryPescheria {
                 try {
                     System.out.println("Inserisci l'ID della pescheria:");
                     idPescheria = Integer.parseInt(scan.nextLine());
-                    inputValido = true;
+                    if (idPescheria > 0) {
+                        inputValido = true;
+                    } else {
+                        System.out.println("Errore, l'ID della pescheria deve essere un numero positivo.");
+                    }
                 } catch (NumberFormatException e) {
                     System.out.println("Errore, inserire un ID valido (numero intero).");
                 }
@@ -59,7 +63,11 @@ public class BoundaryPescheria {
                 try {
                     System.out.println("Inserisci l'ID dell'ordine:");
                     idOrdine = Integer.parseInt(scan.nextLine());
-                    inputValido = true;
+                    if (idOrdine > 0) {
+                        inputValido = true;
+                    } else {
+                        System.out.println("Errore, l'ID dell'ordine deve essere un numero positivo.");
+                    }
                 } catch (NumberFormatException e) {
                     System.out.println("Errore, inserire un ID valido (numero intero).");
                 }
