@@ -8,7 +8,7 @@ public class EntityFattorino {
 	private String nome;
 	private String username;
 	private String password;
-	private String stato; // Stato del fattorino (es. "disponibile", "occupato", etc.)
+	private String stato; // Stato del fattorino (es. "disponibile", "occupato")
 	
 	public EntityFattorino() {
 
