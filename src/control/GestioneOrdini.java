@@ -26,7 +26,7 @@ public class GestioneOrdini {
 	
 	private static GestioneOrdini gO = null;
 
-	protected GestioneOrdini(){
+	protected  GestioneOrdini(){
  
 	}
  
