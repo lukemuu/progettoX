@@ -89,7 +89,16 @@ public void inviaReport() {
  
     
 
+
 public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+
+    if (idPescheria <= 0) {
+        throw new OperationException("L'ID della pescheria deve essere un numero positivo.");
+    }
+
+    if (idOrdine <= 0) {
+        throw new OperationException("L'ID dell'ordine deve essere un numero positivo.");
+    }
 
     if (quantitaAggiornata <= 0) {
         throw new OperationException("La quantità aggiornata deve essere un numero positivo.");
@@ -128,6 +137,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata
 
     System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
 }
+
 
 
  
