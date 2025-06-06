@@ -41,7 +41,7 @@ public class BoundaryPescheria {
         boolean inputValido = false;
 
         try {
-            // Input ID pescheria
+            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci l'ID della pescheria:");
@@ -58,7 +58,7 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            // Input ID ordine
+            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci l'ID dell'ordine:");
@@ -75,7 +75,7 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            // Input quantità aggiornata
+            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci la quantità aggiornata:");
@@ -93,7 +93,7 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            // Input nuovo prezzo
+            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci il nuovo prezzo:");
@@ -109,7 +109,7 @@ public class BoundaryPescheria {
                 }
             }
 
-            // Richiama il metodo del control
+            
             gestioneOrdini.modificaOrdine(idPescheria, idOrdine, quantitaAggiornata, nuovoPrezzo);
             System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
 
