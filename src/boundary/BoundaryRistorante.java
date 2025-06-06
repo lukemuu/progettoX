@@ -10,13 +10,19 @@ import exception.DBConnectionException;
 import exception.OperationException;
 import entity.EntityProdotto;
 import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 public class BoundaryRistorante {
 	
 	 static Scanner scan = new Scanner(System.in);
+	 private static int idRistorante;
 
 	    public static void main(String[] args) { 
 	        boolean exit = false;
+	        
+	        // Genera un ID ristorante casuale all'avvio che simula il login del ristorante
+	        idRistorante = new Random().nextInt(100) + 1; // Genera un numero casuale tra 1 e 100
+	        System.out.println("ID Ristorante generato: " + idRistorante);
 
 	        
 	        while (!exit) {
@@ -44,10 +50,9 @@ public class BoundaryRistorante {
 	        try {
 	            Scanner scan = new Scanner(System.in);
 
-	            int idPescheria = 0;
+	            int idPescheria = 0; 
 	            int idProdotto = 0;
 	            double quantita = 0;
-	            int idRistorante = 1; // Aggiunto per identificare il ristorante
 	            boolean inputValido = false;
 
 	            
