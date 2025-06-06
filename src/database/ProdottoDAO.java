@@ -35,7 +35,8 @@ public class ProdottoDAO {
                 		    result.getString("TIPOLOGIA"),      
                 		    result.getString("DESCRIZIONE"),    
                 		    result.getFloat("PREZZO"),          
-                		    result.getString("CODICEPAESE")     
+                		    result.getString("CODICEPAESE"),
+                		    result.getInt("IDPESCHERIA")
                 		);
                 }
 

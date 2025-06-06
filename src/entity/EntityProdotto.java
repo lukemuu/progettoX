@@ -10,9 +10,10 @@ public class EntityProdotto {
 	private String descrizione;
 	private float prezzo;
 	private String codicePaese;
+	private int idPescheria;  // ID della pescheria a cui appartiene il prodotto
 	
 	public EntityProdotto(int codice, String categoria, String tipologia, String descrizione, float prezzo,
-			String codicePaese) {
+			String codicePaese,int idPescheria) {
 		super();
 		this.idProdotto = contatoreIdProdotto++; // Incrementa il contatore per ogni nuovo prodotto;
 		this.categoria = categoria;
@@ -20,6 +21,7 @@ public class EntityProdotto {
 		this.descrizione = descrizione;
 		this.prezzo = prezzo;
 		this.codicePaese = codicePaese;
+		this.idPescheria = idPescheria; 
 	}
  
 	public int getIdProdotto() {
@@ -69,5 +71,14 @@ public class EntityProdotto {
 	public void setCodicePaese(String codicePaese) {
 		this.codicePaese = codicePaese;
 	}
+
+	public int getIdPescheria() {
+		return idPescheria;
+	}
+
+	public void setIdPescheria(int idPescheria) {
+		this.idPescheria = idPescheria;
+	}
+	
 	
 }
