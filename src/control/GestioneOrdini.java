@@ -65,9 +65,9 @@ public class GestioneOrdini {
 			    // Filtra gli ordini per questa pescheria
 			    List<EntityOrdine> ordiniPescheria = new ArrayList<>();
 			    for (EntityOrdine ordine : listaOrdini) {
-			        if (ordine.getIdPescheria() == idPescheria) {
-			            ordiniPescheria.add(ordine);
-			        }
+					if (ordine.getIdPescheria() == pescheria.getIdPescheria()) {
+					    ordiniPescheria.add(ordine);
+					}
 			    }
 			
 			    System.out.println("Ordini trovati per " + nomePescheria + ": " + ordiniPescheria.size());

@@ -60,7 +60,7 @@ public class GestioneOrdiniTest {
 	    // Inserisci un ordine associato solo alla prima pescheria
 	    try (Statement stmt = connection.createStatement()) {
 	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
-	                     "VALUES (1, 1, 1, 101, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
+	                     "VALUES (1, 2, 1, 101, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
 	    }
 	
 	    // Verifica che ci siano due pescherie nel database
