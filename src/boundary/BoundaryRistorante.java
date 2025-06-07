@@ -91,7 +91,7 @@ public class BoundaryRistorante {
 	            while (!inputValido) {
 	                try {
 	                    System.out.println("Inserisci la quantità del prodotto:");
-	                    quantita = Integer.parseInt(scan.nextLine());
+	                    quantita = Double.parseDouble(scan.nextLine());
 
 	                    if (quantita > 0) {
 	                        inputValido = true;
