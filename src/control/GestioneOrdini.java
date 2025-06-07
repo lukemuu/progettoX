@@ -95,7 +95,7 @@ public class GestioneOrdini {
 
 
 
-public void modificaOrdine(int idPescheria, int idOrdine, int quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
 
     // Recupera la lista degli ordini in trattativa per la pescheria specificata
     List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
