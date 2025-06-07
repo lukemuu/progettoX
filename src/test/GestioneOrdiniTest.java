@@ -32,6 +32,7 @@ public class GestioneOrdiniTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		
 	    try {
 	        connection = DBManager.getConnection();
 	        try (Statement stmt = connection.createStatement()) {
