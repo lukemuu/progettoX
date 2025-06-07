@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import entity.EntityPescheria;
 import exception.DAOException;
@@ -51,39 +52,39 @@ public class PescheriaDAO {
     }
     
 	
-	public static List<EntityPescheria> readPescherie() throws DAOException, DBConnectionException {
+
+	public static List<EntityPescheria> readPescherie() throws DAOException {
 	    List<EntityPescheria> pescherie = new ArrayList<>();
+	    String query = "SELECT * FROM PESCHERIA";
 	
-	    try {
-	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM PESCHERIA;";
+	    try (Connection connection = DBManager.getConnection();
+	         Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
 	
-	        try {
-	            PreparedStatement stmt = conn.prepareStatement(query);
-	            ResultSet result = stmt.executeQuery();
-	
-	            while (result.next()) {
-	                EntityPescheria pescheria = new EntityPescheria(
-	                    result.getString("NOME"),
-	                    result.getString("INDIRIZZO"),
-	                    result.getString("EMAIL"),
-	                    result.getString("USERNAME"),
-	                    result.getString("PASSWORD")
-	                );
-	                pescherie.add(pescheria);
-	            }
-	        } catch (SQLException e) {
-	            throw new DAOException("Errore lettura pescherie");
-	        } finally {
-	            DBManager.closeConnection();
+	        while (rs.next()) {
+	            EntityPescheria pescheria = new EntityPescheria(
+	                rs.getString("NOME"),
+	                rs.getString("INDIRIZZO"),
+	                rs.getString("EMAIL"),
+	                rs.getString("USERNAME"),
+	                rs.getString("PASSWORD")
+	            );
+	            pescherie.add(pescheria);
 	        }
 	
-	    } catch (SQLException e) {
-	        throw new DBConnectionException("Errore di connessione DB");
+	        // Log per debug
+	        System.out.println("Pescherie trovate: " + pescherie.size());
+	        for (EntityPescheria p : pescherie) {
+	            System.out.println("ID: " + p.getIdPescheria() + ", Nome: " + p.getNome());
+	        }
+	
+	    } catch (Exception e) {
+	        throw new DAOException("Errore durante il recupero delle pescherie: " + e.getMessage(), e);
 	    }
 	
 	    return pescherie;
 	}
+
 
 
     public static boolean createPescheria(EntityPescheria pescheria) throws DAOException, DBConnectionException {

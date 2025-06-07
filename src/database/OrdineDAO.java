@@ -223,10 +223,13 @@ public class OrdineDAO {
 	    try {
 	        Connection conn = DBManager.getConnection();
 	        String query = "SELECT IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA, PREZZO, STATO " +
-	                       "FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != ?;";
+	                       "FROM ORDINE WHERE DATA >= ? AND STATO != ?;";
 	
 	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-	            stmt.setString(1, StatoOrdine.IN_TRATTATIVA.name());
+	            // Imposta la data di 7 giorni fa
+	            stmt.setDate(1, new java.sql.Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000));
+	            stmt.setString(2, StatoOrdine.IN_TRATTATIVA.name());
+	
 	            ResultSet result = stmt.executeQuery();
 	
 	            while (result.next()) {
@@ -243,6 +246,8 @@ public class OrdineDAO {
 	                ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
 	                ordini.add(ordine);
 	            }
+	
+	            System.out.println("Ordini trovati: " + ordini.size());
 	        } catch (SQLException e) {
 	            throw new DAOException("Errore lettura ordini dell'ultima settimana: " + e.getMessage(), e);
 	        } finally {
@@ -255,6 +260,7 @@ public class OrdineDAO {
 	
 	    return ordini;
 	}
+
 
     
 

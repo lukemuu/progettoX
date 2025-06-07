@@ -44,27 +44,30 @@ public class GestioneOrdiniTest {
 	        throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
 	    }
 	}
+
 	
 
 	@Test
-	public void testInviaReportConPescheriaEOrdine() throws Exception {
-	    // Inserisci una pescheria nel database
+	public void testInviaReportConPiuPescherieEUnSoloOrdine() throws Exception {
+	    // Inserisci due pescherie nel database
 	    try (Statement stmt = connection.createStatement()) {
 	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
 	                     "VALUES (1, 'Pescheria1', 'Via Roma 1', 'lukeesposito03@gmail.com', 'user1', 'pass1')");
+	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
+	                     "VALUES (2, 'Pescheria2', 'Via Roma 2', 'luca.pesacane7@gmail.com', 'user2', 'pass2')");
 	    }
 	
-	    // Inserisci un ordine associato alla pescheria
+	    // Inserisci un ordine associato solo alla prima pescheria
 	    try (Statement stmt = connection.createStatement()) {
 	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
 	                     "VALUES (1, 1, 1, 101, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
 	    }
 	
-	    // Verifica che ci sia una pescheria nel database
+	    // Verifica che ci siano due pescherie nel database
 	    List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-	    assertEquals("Dovrebbe esserci una pescheria", 1, listaPescherie.size());
+	    assertEquals("Dovrebbero esserci due pescherie", 2, listaPescherie.size());
 	
-	    // Verifica che ci sia un ordine nel database
+	    // Verifica che ci sia un solo ordine nel database
 	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
 	    assertEquals("Dovrebbe esserci un ordine", 1, listaOrdini.size());
 	
@@ -73,11 +76,16 @@ public class GestioneOrdiniTest {
 	    gestioneOrdini.inviaReport();
 	
 	    // Verifica l'output di System.out
-	    String expectedOutput = "Report inviato a: lukeesposito03@gmail.com (Pescheria1)";
-	    assertTrue("Il messaggio di invio del report non è stato stampato correttamente", outContent.toString().contains(expectedOutput));
+	    String expectedOutputPescheria1 = "Report inviato a: lukeesposito03@gmail.com (Pescheria1)";
+	    String expectedOutputPescheria2 = "Report inviato a: luca.pesacane7@gmail.com (Pescheria2)";
+	    String output = outContent.toString();
+	
+	    assertTrue("Il report per Pescheria1 non è stato inviato correttamente", output.contains(expectedOutputPescheria1));
+	    assertTrue("Il report vuoto per Pescheria2 non è stato inviato correttamente", output.contains(expectedOutputPescheria2));
 	}
 
-	
+
+
 	@After
 	public void tearDown() throws Exception {
 	    try {

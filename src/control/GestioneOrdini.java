@@ -54,34 +54,35 @@ public class GestioneOrdini {
 	        // Configura il servizio email
 	        EmailService emailService = new EmailService();
 	
-	        // Per ogni pescheria, filtra gli ordini corrispondenti e invia il report
-	        for (EntityPescheria pescheria : listaPescherie) {
-	            String email = pescheria.getEmail();
-	            String nomePescheria = pescheria.getNome();
-	            int idPescheria = pescheria.getIdPescheria();
-	
 
-		         // Filtra gli ordini per questa pescheria
-		         List<EntityOrdine> ordiniPescheria = new ArrayList<>();
-		         for (EntityOrdine ordine : listaOrdini) {
-		             if (ordine.getIdPescheria() == idPescheria) {
-		                 ordiniPescheria.add(ordine);
-		             }
-		         }
+			for (EntityPescheria pescheria : listaPescherie) {
+			    String email = pescheria.getEmail();
+			    String nomePescheria = pescheria.getNome();
+			    int idPescheria = pescheria.getIdPescheria();
+			
+			    System.out.println("Pescheria: " + nomePescheria + " (ID: " + idPescheria + ")");
+			
+			    // Filtra gli ordini per questa pescheria
+			    List<EntityOrdine> ordiniPescheria = new ArrayList<>();
+			    for (EntityOrdine ordine : listaOrdini) {
+			        if (ordine.getIdPescheria() == idPescheria) {
+			            ordiniPescheria.add(ordine);
+			        }
+			    }
+			
+			    System.out.println("Ordini trovati per " + nomePescheria + ": " + ordiniPescheria.size());
+			
+			    try {
+			        if (ordiniPescheria.isEmpty()) {
+			            emailService.inviaReportVuoto(email, nomePescheria);
+			        } else {
+			            emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
+			        }
+			        System.out.println("Report inviato a: " + email + " (" + nomePescheria + ")");
+			    } catch (MessagingException e) {
+			        System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
+			    }
 
-	
-	            try {
-	                if (ordiniPescheria.isEmpty()) {
-	                    // Invia report vuoto
-	                    emailService.inviaReportVuoto(email, nomePescheria);
-	                } else {
-	                    // Invia report con ordini
-	                    emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
-	                }
-	                System.out.println("Report inviato a: " + email + " (" + nomePescheria + ")");
-	            } catch (MessagingException e) {
-	                System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
-	            }
 	        }
 	    } catch (DAOException | DBConnectionException e) {
 	        System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
