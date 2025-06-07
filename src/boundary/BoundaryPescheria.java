@@ -1,3 +1,4 @@
+
 package boundary;
 
 import java.util.Scanner;
@@ -36,12 +37,12 @@ public class BoundaryPescheria {
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
         int idPescheria = 0;
         int idOrdine = 0;
-        int quantitaAggiornata = 0;
+        double quantitaAggiornata = 0.0;
         float nuovoPrezzo = 0.0f;
         boolean inputValido = false;
 
         try {
-            
+
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci l'ID della pescheria:");
@@ -58,7 +59,6 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci l'ID dell'ordine:");
@@ -75,11 +75,10 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci la quantità aggiornata:");
-                    quantitaAggiornata = Integer.parseInt(scan.nextLine());
+                    quantitaAggiornata = Double.parseDouble(scan.nextLine());
 
                     if (quantitaAggiornata > 0) {
                         inputValido = true;
@@ -93,7 +92,6 @@ public class BoundaryPescheria {
 
             inputValido = false;
 
-            
             while (!inputValido) {
                 try {
                     System.out.println("Inserisci il nuovo prezzo:");
@@ -109,7 +107,6 @@ public class BoundaryPescheria {
                 }
             }
 
-            
             gestioneOrdini.modificaOrdine(idPescheria, idOrdine, quantitaAggiornata, nuovoPrezzo);
             System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
 
