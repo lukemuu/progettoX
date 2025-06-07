@@ -84,7 +84,12 @@ public void inviaReportOrdini(String destinatario, String nomePescheria, List<En
 
 
 
+
 public void inviaReportVuoto(String destinatario, String nomePescheria) throws MessagingException {
+    if (destinatario == null || destinatario.isEmpty()) {
+        throw new MessagingException("Il destinatario dell'email è nullo o vuoto.");
+    }
+
     // Configurazione delle proprietà per il server SMTP
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
@@ -116,9 +121,14 @@ public void inviaReportVuoto(String destinatario, String nomePescheria) throws M
     // Imposta il contenuto HTML nel messaggio
     message.setContent(corpoEmail, "text/html; charset=utf-8");
 
+    // Log per debug
+    System.out.println("Invio email a: " + destinatario);
+    System.out.println("Oggetto: Report ordini - " + nomePescheria);
+
     // Invio dell'email
     Transport.send(message);
 }
+
 
 
 public void inviaMail(String emailPescheria, int codProdotto, double quantita,int idOrdine,float prezzo) throws MessagingException {

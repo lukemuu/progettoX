@@ -60,10 +60,15 @@ public class GestioneOrdini {
 	            String nomePescheria = pescheria.getNome();
 	            int idPescheria = pescheria.getIdPescheria();
 	
-	            // Filtra gli ordini per questa pescheria
-	            List<EntityOrdine> ordiniPescheria = listaOrdini.stream()
-	                    .filter(ordine -> ordine.getIdPescheria() == idPescheria)
-	                    .toList();
+
+		         // Filtra gli ordini per questa pescheria
+		         List<EntityOrdine> ordiniPescheria = new ArrayList<>();
+		         for (EntityOrdine ordine : listaOrdini) {
+		             if (ordine.getIdPescheria() == idPescheria) {
+		                 ordiniPescheria.add(ordine);
+		             }
+		         }
+
 	
 	            try {
 	                if (ordiniPescheria.isEmpty()) {

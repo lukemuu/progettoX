@@ -216,42 +216,47 @@ public class OrdineDAO {
         return ordini;
     }
 
-    public static List<EntityOrdine> readOrdiniReport() throws DAOException, DBConnectionException {
-        List<EntityOrdine> ordini = new ArrayList<>();
+	
+	public static List<EntityOrdine> readOrdiniReport() throws DAOException, DBConnectionException {
+	    List<EntityOrdine> ordini = new ArrayList<>();
+	
+	    try {
+	        Connection conn = DBManager.getConnection();
+	        String query = "SELECT IDORDINE, IDRISTORANTE, IDPESCHERIA, DATA, IDPRODOTTO, QTA, QTAAGGIORNATA, PREZZO, STATO " +
+	                       "FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != ?;";
+	
+	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setString(1, StatoOrdine.IN_TRATTATIVA.name());
+	            ResultSet result = stmt.executeQuery();
+	
+	            while (result.next()) {
+	                EntityOrdine ordine = new EntityOrdine(
+	                    result.getInt("IDRISTORANTE"),
+	                    result.getInt("IDPESCHERIA"),
+	                    result.getInt("IDPRODOTTO"),
+	                    result.getDate("DATA"),
+	                    result.getDouble("QTA"),
+	                    result.getFloat("PREZZO")
+	                );
+	                ordine.setIdOrdine(result.getInt("IDORDINE"));
+	                ordine.setQtaAggiornata(result.getDouble("QTAAGGIORNATA"));
+	                ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
+	                ordini.add(ordine);
+	            }
+	        } catch (SQLException e) {
+	            throw new DAOException("Errore lettura ordini dell'ultima settimana: " + e.getMessage(), e);
+	        } finally {
+	            DBManager.closeConnection();
+	        }
+	
+	    } catch (SQLException e) {
+	        throw new DBConnectionException("Errore di connessione al database: " + e.getMessage(), e);
+	    }
+	
+	    return ordini;
+	}
 
-        try {
-            Connection conn = DBManager.getConnection();
-            String query = "SELECT * FROM ORDINE WHERE DATA >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND STATO != ?;";
-
-            try {
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, StatoOrdine.IN_TRATTATIVA.name());
-                ResultSet result = stmt.executeQuery();
-
-                while (result.next()) {
-                    EntityOrdine ordine = new EntityOrdine(
-                        result.getInt("IDRISTORANTE"),
-                        result.getInt("IDPESCHERIA"),
-                        result.getInt("IDPRODOTTO"),
-                        result.getDate("DATA"),
-                        result.getDouble("QTA"),
-                        result.getFloat("PREZZO")
-                    );
-                    ordine.setStato(StatoOrdine.valueOf(result.getString("STATO")));
-                    ordini.add(ordine);
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Errore lettura ordini dell'ultima settimana");
-            } finally {
-                DBManager.closeConnection();
-            }
-
-        } catch (SQLException e) {
-            throw new DBConnectionException("Errore di connessione DB");
-        }
-
-        return ordini;
-    }
+    
 
     public static List<EntityOrdine> readOrdiniUltimoGiorno() throws DAOException, DBConnectionException {
         List<EntityOrdine> ordini = new ArrayList<>();

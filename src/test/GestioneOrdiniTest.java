@@ -13,32 +13,70 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
+import entity.EntityOrdine;
 import entity.EntityPescheria;
 import database.PescheriaDAO;
 import database.DBManager;
+import database.OrdineDAO;
 import control.GestioneOrdini;
 
 public class GestioneOrdiniTest {
 
     private Connection connection;
+    
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalErr = System.err;
 
-
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final PrintStream originalOut = System.out;
+	
 	@Before
 	public void setUp() throws Exception {
 	    try {
 	        connection = DBManager.getConnection();
 	        try (Statement stmt = connection.createStatement()) {
-	            stmt.execute("CREATE TABLE IF NOT EXISTS PESCHERIA (id INT PRIMARY KEY, nome VARCHAR(255), email VARCHAR(255))");
-	            stmt.execute("CREATE TABLE IF NOT EXISTS ORDINE (id INT PRIMARY KEY, pescheria_id INT, descrizione VARCHAR(255))");
-	            stmt.execute("INSERT INTO ORDINE (id, pescheria_id, descrizione) VALUES (1, 1, 'Ordine1')");
+	            stmt.execute("CREATE TABLE IF NOT EXISTS PESCHERIA (IDPESCHERIA INT PRIMARY KEY, NOME VARCHAR(255), INDIRIZZO VARCHAR(255), EMAIL VARCHAR(255), USERNAME VARCHAR(255), PASSWORD VARCHAR(255))");
+	            stmt.execute("CREATE TABLE IF NOT EXISTS ORDINE (IDORDINE INT PRIMARY KEY, IDPESCHERIA INT, IDRISTORANTE INT, IDPRODOTTO INT, DATA DATE, QTA DOUBLE, QTAAGGIORNATA DOUBLE, PREZZO FLOAT, STATO VARCHAR(255))");
 	        }
-	        System.setErr(new PrintStream(errContent));
+	        System.setOut(new PrintStream(outContent)); // Reindirizza System.out
+	        System.setErr(new PrintStream(errContent)); // Reindirizza System.err
 	    } catch (Exception e) {
 	        throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
 	    }
 	}
+	
+
+	@Test
+	public void testInviaReportConPescheriaEOrdine() throws Exception {
+	    // Inserisci una pescheria nel database
+	    try (Statement stmt = connection.createStatement()) {
+	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
+	                     "VALUES (1, 'Pescheria1', 'Via Roma 1', 'lukeesposito03@gmail.com', 'user1', 'pass1')");
+	    }
+	
+	    // Inserisci un ordine associato alla pescheria
+	    try (Statement stmt = connection.createStatement()) {
+	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
+	                     "VALUES (1, 1, 1, 101, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
+	    }
+	
+	    // Verifica che ci sia una pescheria nel database
+	    List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
+	    assertEquals("Dovrebbe esserci una pescheria", 1, listaPescherie.size());
+	
+	    // Verifica che ci sia un ordine nel database
+	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
+	    assertEquals("Dovrebbe esserci un ordine", 1, listaOrdini.size());
+	
+	    // Esegui il metodo inviaReport
+	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
+	    gestioneOrdini.inviaReport();
+	
+	    // Verifica l'output di System.out
+	    String expectedOutput = "Report inviato a: lukeesposito03@gmail.com (Pescheria1)";
+	    assertTrue("Il messaggio di invio del report non è stato stampato correttamente", outContent.toString().contains(expectedOutput));
+	}
+
 	
 	@After
 	public void tearDown() throws Exception {
@@ -53,25 +91,13 @@ public class GestioneOrdiniTest {
 	    } catch (Exception e) {
 	        throw new RuntimeException("Errore durante la chiusura del database: " + e.getMessage(), e);
 	    } finally {
-	        System.setErr(originalErr);
+	        System.setOut(originalOut); // Ripristina System.out
+	        System.setErr(originalErr); // Ripristina System.err
 	    }
 	}
 
 
-    @Test
-    public void testIntegrazioneNessunaPescheria() throws Exception {
-        // Simula il caso in cui non ci siano pescherie
-        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-        assertTrue("La lista delle pescherie dovrebbe essere vuota", listaPescherie.isEmpty());
 
-        // Esegui il metodo inviaReport
-        GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
-        gestioneOrdini.inviaReport();
-
-        // Verifica l'output di System.err
-        String expectedError = "Errore: Nessuna pescheria trovata. Il report non può essere inviato.";
-        assertTrue(errContent.toString().contains(expectedError));
-    }
 }
 
 
