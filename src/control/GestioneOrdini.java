@@ -277,7 +277,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiorn
             	);
  
             // Salva l'ordine temporaneo  in una lista temporanea
-            nuovoOrdine.saveOrdine();
+            OrdineDAO.createOrdine(nuovoOrdine);
 
             // Aggiungi l'ID dell'ordine alla lista di ritorno
             returnList.set(2, String.valueOf(nuovoOrdine.getIdOrdine()));

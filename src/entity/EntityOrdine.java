@@ -35,6 +35,7 @@ public class EntityOrdine {
 		this.data = data;
 		this.idProdotto = idProdotto;
 		this.qta = qta;
+		this.qtaAggiornata = 0.0; // Inizialmente la quantità aggiornata è uguale a quella richiesta
 		this.stato = StatoOrdine.IN_TRATTATIVA; // Stato iniziale dell'ordine
 		this.prezzo = prezzo;		
 		
