@@ -33,7 +33,7 @@ public class BoundaryPescheria {
         System.out.println("Arrivederci!");
     }
 
-    private static void modificaOrdine() {
+    public static void modificaOrdine() {
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
         int idPescheria = 0;
         int idOrdine = 0;
