@@ -43,6 +43,8 @@ public class GestioneOrdiniTestTotore {
                          "CODICEPAESE VARCHAR(255), " +
                          "IDPESCHERIA INT, " +
                          "FOREIGN KEY (IDPESCHERIA) REFERENCES PESCHERIA(IDPESCHERIA))");
+            
+            stmt.execute("CREATE TABLE IF NOT EXISTS ORDINE (IDORDINE INT PRIMARY KEY, IDPESCHERIA INT, IDRISTORANTE INT, IDPRODOTTO INT, DATA DATE, QTA DOUBLE, QTAAGGIORNATA DOUBLE, PREZZO FLOAT, STATO VARCHAR(255))");
 
             // Pulizia delle tabelle
             stmt.execute("DELETE FROM PRODOTTO");
@@ -82,6 +84,23 @@ public class GestioneOrdiniTestTotore {
             // Ripristina System.out
             System.setOut(originalOut);
         }
+    }
+    
+    @Test
+    public void testAcquistaProdottoProdottoNonTrovato() {
+        // Simula input con idProdotto = 1 e idPescheria = 2 (non corrispondenti)
+        String input = "2\n1\n5.0\n"; // ID pescheria = 2, ID prodotto = 1, quantità = 5.0
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // Esegui il metodo del Boundary
+        BoundaryRistorante.acquistaProdotto();
+
+        // Cattura l'output generato
+        String output = outContent.toString();
+
+        // Verifica che l'output contenga il messaggio di errore atteso
+        assertTrue("L'output non contiene 'Prodotto non trovato'. Output ricevuto: " + output,
+                   output.contains("Prodotto non trovato"));
     }
 
     @Test
