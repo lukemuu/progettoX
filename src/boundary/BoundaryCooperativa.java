@@ -57,51 +57,85 @@ public class BoundaryCooperativa {
 		System.out.println("Arrivederci!");
 	}
 	
+
 	public static void assegnaConsegna() {
-        Scanner scanner = new Scanner(System.in);
- 
-        try { 
-        	
-        	List<EntityFattorino> fattorini = GestioneOrdini.stampaListaFattorini();
-        	
-        	System.out.println("Seleziona un fattorino dall'elenco:");
+	    Scanner scanner = new Scanner(System.in);
+	
+	    try {
+	        List<EntityFattorino> fattorini = GestioneOrdini.stampaListaFattorini();
+	
+	        System.out.println("Seleziona un fattorino dall'elenco:");
 	        for (int i = 0; i < fattorini.size(); i++) {
 	            EntityFattorino fattorino = fattorini.get(i);
 	            System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
 	        }
-	       
-            System.out.print("Inserisci il numero del fattorino selezionato: ");
-            int sceltaFattorino = scanner.nextInt();
-            EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
-            
-            List<EntityOrdine> ordini = GestioneOrdini.stampaListaOrdini();
-            
-            System.out.println("Seleziona un ordine dall'elenco:");
+	
+	        int sceltaFattorino = -1;
+	        boolean inputValidoFattorino = false;
+	        
+	        while (!inputValidoFattorino) {
+	            try {
+	                System.out.println("Inserisci l'ID del fattorino:");
+	                sceltaFattorino = Integer.parseInt(scan.nextLine());
+
+	                if (sceltaFattorino > 0) {
+	                    inputValidoFattorino = true;
+	                } else {
+	                    System.out.println("Errore, l'ID del fattorino deve essere un numero positivo.");
+	                }
+	            } catch (NumberFormatException e) {
+	                System.out.println("Errore, inserire un ID valido (numero intero).");
+	            }
+	        }
+	        
+	        //EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
+	        
+	
+	        List<EntityOrdine> ordini = GestioneOrdini.stampaListaOrdini();
+	
+	        System.out.println("Seleziona un ordine dall'elenco:");
 	        for (int i = 0; i < ordini.size(); i++) {
 	            EntityOrdine ordine = ordini.get(i);
 	            System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
 	        }
- 
-            System.out.print("Inserisci il numero dell'ordine selezionato: ");
-            int sceltaOrdine = scanner.nextInt();
-            EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
- 
-            // Passa le scelte a GestioneOrdini
-            GestioneOrdini.assegnaConsegna(ordineSelezionato, fattorinoSelezionato);
- 
-            System.out.println("Consegna assegnata con successo! ... Preso a carico " + ordineSelezionato + ". La consegna verrà effettuata da " + fattorinoSelezionato + " il prima possibile.");
- 
-		} catch (DAOException e) {
-			System.err.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
-		} catch (OperationException e) {
-			System.err.println("Errore nell'operazione: " + e.getMessage());
-		} catch (DBConnectionException e) {
-			System.err.println("Errore di connessione al database: " + e.getMessage());
-		} catch (Exception e) {
-			System.err.println("Errore imprevisto: " + e.getMessage());
-		} finally {
-			scanner.close();
-		}
-    }
- 
+	        
+	        boolean inputValidoOrdine = false;
+	        int sceltaOrdine = 0;
+	
+	        while (!inputValidoOrdine) {
+	            try {
+	                System.out.println("Inserisci l'ID dell'ordine:");
+	                sceltaOrdine = Integer.parseInt(scan.nextLine());
+
+	                if (sceltaOrdine > 0) {
+	                    inputValidoOrdine = true;
+	                } else {
+	                    System.out.println("Errore, l'ID dell'ordine deve essere un numero positivo.");
+	                }
+	            } catch (NumberFormatException e) {
+	                System.out.println("Errore, inserire un ID valido (numero intero).");
+	            }
+	        }
+	        
+	        //EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
+
+	        // Passa le scelte a GestioneOrdini
+	        GestioneOrdini.assegnaConsegna(sceltaOrdine, sceltaFattorino);
+	
+	        System.out.println("Consegna assegnata con successo! ... Preso a carico " + sceltaOrdine + ". La consegna verrà effettuata da " + sceltaFattorino + " il prima possibile.");
+	
+	    } catch (DAOException e) {
+	        System.err.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
+	    } catch (OperationException e) {
+	        System.err.println("Errore nell'operazione: " + e.getMessage());
+	    } catch (DBConnectionException e) {
+	        System.err.println("Errore di connessione al database: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.err.println("Errore imprevisto: " + e.getMessage());
+	    } finally {
+	        scanner.close();
+	    }
+	}
+
 }
+ 

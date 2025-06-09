@@ -44,8 +44,7 @@ public class EntityOrdine {
 	public EntityOrdine() {
 		
 	}
-	
-	
+
 	public int getIdOrdine() {
 		return idOrdine;
 	}

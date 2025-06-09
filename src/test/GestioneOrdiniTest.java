@@ -36,6 +36,7 @@ public class GestioneOrdiniTest {
 	    try {
 	        connection = DBManager.getConnection();
 	        try (Statement stmt = connection.createStatement()) {
+	        	
 	            stmt.execute("CREATE TABLE IF NOT EXISTS PESCHERIA (IDPESCHERIA INT PRIMARY KEY, NOME VARCHAR(255), INDIRIZZO VARCHAR(255), EMAIL VARCHAR(255), USERNAME VARCHAR(255), PASSWORD VARCHAR(255))");
 	            stmt.execute("CREATE TABLE IF NOT EXISTS ORDINE (IDORDINE INT PRIMARY KEY, IDPESCHERIA INT, IDRISTORANTE INT, IDPRODOTTO INT, DATA DATE, QTA DOUBLE, QTAAGGIORNATA DOUBLE, PREZZO FLOAT, STATO VARCHAR(255))");
 	        }
