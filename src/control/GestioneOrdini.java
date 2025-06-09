@@ -75,10 +75,11 @@ public class GestioneOrdini {
 			    try {
 			        if (ordiniPescheria.isEmpty()) {
 			            emailService.inviaReportVuoto(email, nomePescheria);
+			            System.out.println("Report vuoto inviato a: " + email + " (" + nomePescheria + ")");
 			        } else {
 			            emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
+			            System.out.println("Report dettagliato inviato a: " + email + " (" + nomePescheria + ")");
 			        }
-			        System.out.println("Report inviato a: " + email + " (" + nomePescheria + ")");
 			    } catch (MessagingException e) {
 			        System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
 			    }

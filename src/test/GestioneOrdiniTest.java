@@ -46,44 +46,43 @@ public class GestioneOrdiniTest {
 	    }
 	}
 
-	
 
+	
 	@Test
-	public void testInviaReportConPiuPescherieEUnSoloOrdine() throws Exception {
-	    // Inserisci due pescherie nel database
+	public void testInviaReportConUnaPescheriaEVariOrdini() throws Exception {
+	    // Inserisci una pescheria nel database
 	    try (Statement stmt = connection.createStatement()) {
 	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
-	                     "VALUES (1, 'Pescheria1', 'Via Roma 1', 'lukeesposito03@gmail.com', 'user1', 'pass1')");
-	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
-	                     "VALUES (2, 'Pescheria2', 'Via Roma 2', 'luca.pesacane7@gmail.com', 'user2', 'pass2')");
+	                     "VALUES (1, 'Pescheria Test', 'Via Test, 123', 'lukeesposito03@gmail.com', 'testuser', 'testpassword')");
 	    }
 	
-	    // Inserisci un ordine associato solo alla prima pescheria
+	    // Inserisci vari ordini per la pescheria
 	    try (Statement stmt = connection.createStatement()) {
 	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
-	                     "VALUES (1, 2, 1, 101, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
+	                     "VALUES (1, 1, 101, 201, '2025-06-06', 10.0, 10.0, 100.0, 'CONFERMATO')");
+	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
+	                     "VALUES (2, 1, 102, 202, '2025-06-07', 5.0, 5.0, 50.0, 'CONFERMATO')");
+	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
+	                     "VALUES (3, 1, 103, 203, '2025-06-08', 20.0, 20.0, 200.0, 'CONFERMATO')");
 	    }
 	
-	    // Verifica che ci siano due pescherie nel database
+	    // Assicurati che ci sia una pescheria e tre ordini
 	    List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-	    assertEquals("Dovrebbero esserci due pescherie", 2, listaPescherie.size());
+	    assertEquals("Dovrebbe esserci una pescheria", 1, listaPescherie.size());
 	
-	    // Verifica che ci sia un solo ordine nel database
 	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
-	    assertEquals("Dovrebbe esserci un ordine", 1, listaOrdini.size());
+	    assertEquals("Dovrebbero esserci tre ordini", 3, listaOrdini.size());
 	
 	    // Esegui il metodo inviaReport
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 	
-	    // Verifica l'output di System.out
-	    String expectedOutputPescheria1 = "Report inviato a: lukeesposito03@gmail.com (Pescheria1)";
-	    String expectedOutputPescheria2 = "Report inviato a: luca.pesacane7@gmail.com (Pescheria2)";
-	    String output = outContent.toString();
-	
-	    assertTrue("Il report per Pescheria1 non è stato inviato correttamente", output.contains(expectedOutputPescheria1));
-	    assertTrue("Il report vuoto per Pescheria2 non è stato inviato correttamente", output.contains(expectedOutputPescheria2));
+	    // Verifica che l'output su System.out contenga il messaggio di report con gli ordini
+	    String output = outContent.toString().trim();
+	    assertTrue(output.contains("Report inviato a: lukeesposito03@gmail.com (Pescheria Test)"));
+	    assertTrue(output.contains("Ordini trovati per Pescheria Test: 3"));
 	}
+
 
 
 
