@@ -16,31 +16,38 @@ public class BoundaryTempo {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public void avviaScheduler() {
-        Runnable task = () -> {
-            if (LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY) {
-                gestioneOrdini.inviaReport();
-            }
-        };
 
-        long initialDelay = calcolaRitardoIniziale();
-        scheduler.scheduleAtFixedRate(task, initialDelay, 7, TimeUnit.DAYS);
-    }
+	public void avviaScheduler() {
+	    Runnable task = () -> {
+	        System.out.println("Esecuzione dello scheduler: " + LocalDate.now() + " " + LocalTime.now());
+	        gestioneOrdini.inviaReport();
+	    };
+	
+	    long initialDelay = calcolaRitardoIniziale();
+	    System.out.println("Scheduler avviato con ritardo iniziale di: " + initialDelay + " millisecondi.");
+	    scheduler.scheduleAtFixedRate(task, initialDelay, TimeUnit.DAYS.toMillis(7), TimeUnit.MILLISECONDS);
+	}
+	
+	private long calcolaRitardoIniziale() {
+	    LocalDate oggi = LocalDate.now();
+	    LocalTime oraCorrente = LocalTime.now();
+	    LocalTime oraEsecuzione = LocalTime.of(9, 0); // Orario impostato alle 9:00
+	
+	    // Calcola i giorni di differenza fino al prossimo lunedì
+	    int giorniFinoAlProssimoLunedi = (DayOfWeek.MONDAY.getValue() - oggi.getDayOfWeek().getValue() + 7) % 7;
+	    if (giorniFinoAlProssimoLunedi == 0 && oraCorrente.isAfter(oraEsecuzione)) {
+	        giorniFinoAlProssimoLunedi = 7; // Pianifica per il lunedì successivo se l'orario è già passato
+	    }
+	
+	    // Calcola il ritardo in millisecondi
+	    long ritardoInSecondi = giorniFinoAlProssimoLunedi * 24 * 60 * 60
+	            + oraEsecuzione.toSecondOfDay() - oraCorrente.toSecondOfDay();
+	    long ritardoInMillis = TimeUnit.SECONDS.toMillis(ritardoInSecondi);
+	
+	    System.out.println("Ritardo iniziale calcolato: " + ritardoInMillis + " millisecondi.");
+	    return ritardoInMillis;
+	}
 
-    private long calcolaRitardoIniziale() {
-        LocalDate oggi = LocalDate.now();
-        LocalTime oraCorrente = LocalTime.now();
-        LocalTime oraEsecuzione = LocalTime.of(9, 0); // Esempio: esegui alle 9:00
-
-        long ritardo = 0;
-        if (oggi.getDayOfWeek() != DayOfWeek.MONDAY) {
-            ritardo = TimeUnit.DAYS.toMillis(DayOfWeek.MONDAY.getValue() - oggi.getDayOfWeek().getValue());
-        } else if (oraCorrente.isAfter(oraEsecuzione)) {
-            ritardo = TimeUnit.DAYS.toMillis(7); // Pianifica per il prossimo lunedì
-        }
-
-        return ritardo + TimeUnit.MILLISECONDS.convert(oraEsecuzione.toSecondOfDay() - oraCorrente.toSecondOfDay(), TimeUnit.SECONDS);
-    }
 
     public void fermaScheduler() {
         scheduler.shutdown();

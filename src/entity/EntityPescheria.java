@@ -17,7 +17,11 @@ public class EntityPescheria {
         this.password = password;
     }
 
-    public int getIdPescheria() {
+    public EntityPescheria() {
+
+	}
+
+	public int getIdPescheria() {
         return idPescheria;
     }
 
