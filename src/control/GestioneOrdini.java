@@ -27,7 +27,7 @@ public class GestioneOrdini {
 	
 	private static GestioneOrdini gO = null;
 
-	protected  GestioneOrdini(){
+	public GestioneOrdini(){
  
 	}
  
@@ -184,29 +184,29 @@ public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiorn
         return ordini;
 	}
  
-    public static void assegnaConsegna(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato)
+    public static void assegnaConsegna(int idOrdine, int idFattorino)
             throws OperationException, DAOException, DBConnectionException {
  
         // Controlla se ordine e fattorino sono stati selezionati
-        if (ordineSelezionato == null) {
+        /*if (ordineSelezionato == null) {
             throw new OperationException("Nessun ordine selezionato.");
         }
         if (fattorinoSelezionato == null) {
             throw new OperationException("Nessun fattorino selezionato.");
-        }
+        }*/
  
         // Richiama la funzione per creare la consegna
-        boolean successo = ConsegnaDAO.creaConsegna(new Date(System.currentTimeMillis()));
+        boolean successo = ConsegnaDAO.creaConsegna(idOrdine, idFattorino, new Date(System.currentTimeMillis()));
  
         if (!successo) {
             throw new OperationException("Errore durante l'assegnazione della consegna.");
         }
  
         // Stampa un riepilogo delle scelte selezionate
-        stampaScelteSelezionate(ordineSelezionato, fattorinoSelezionato);
+        stampaScelteSelezionate(idOrdine, idFattorino);
     }
     
-    // Metodi per salvare le scelte
+    /* Metodi per salvare le scelte
     private static EntityOrdine ordineSelezionato;
     private static EntityFattorino fattorinoSelezionato;
  
@@ -224,22 +224,21 @@ public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiorn
  
     public static EntityFattorino getFattorinoSelezionato() {
         return fattorinoSelezionato;
-    }
+    }*/
 
  
-    private static void stampaScelteSelezionate(EntityOrdine ordineSelezionato, EntityFattorino fattorinoSelezionato) {
+    private static void stampaScelteSelezionate(int idOrdine, int idFattorino) throws OperationException, DAOException, DBConnectionException {
         System.out.println("========================================");
         System.out.println("          Riepilogo Scelte Utente       ");
         System.out.println("========================================");
  
         System.out.println("Ordine Selezionato:");
-        System.out.println("  - ID Ordine: " + ordineSelezionato.getIdOrdine());
+        System.out.println("  - ID Ordine: " + idOrdine);
  
         System.out.println("----------------------------------------");
  
         System.out.println("Fattorino Selezionato:");
-        System.out.println("  - Nome: " + fattorinoSelezionato.getNome());
-        System.out.println("  - ID Fattorino: " + fattorinoSelezionato.getIdFattorino());
+        System.out.println("  - ID Fattorino: " + idFattorino);
  
         System.out.println("========================================");
     }

@@ -1,4 +1,3 @@
-
 package database;
 
 import java.sql.Connection;
@@ -8,11 +7,9 @@ import entity.EntityOrdine;
 import exception.DAOException;
 import exception.DBConnectionException;
 
-import control.GestioneOrdini;
-
 public class ConsegnaDAO {
 
-    public static boolean creaConsegna(java.sql.Date dataOdierna) throws DAOException, DBConnectionException {
+    public static boolean creaConsegna(int idOrdine, int idFattorino, java.sql.Date dataOdierna) throws DAOException, DBConnectionException {
         boolean success = false;
 
         try {
@@ -21,8 +18,8 @@ public class ConsegnaDAO {
 
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 // Imposta i parametri della query
-                stmt.setInt(1, GestioneOrdini.getOrdineSelezionato().getIdOrdine());
-                stmt.setInt(2, GestioneOrdini.getFattorinoSelezionato().getIdFattorino());
+                stmt.setInt(1, idOrdine);
+                stmt.setInt(2, idFattorino);
                 stmt.setDate(3, dataOdierna);
 
                 // Esegui l'operazione di inserimento
@@ -31,7 +28,7 @@ public class ConsegnaDAO {
                 // Se la consegna è stata creata con successo, aggiorna lo stato dell'ordine
                 if (success) {
                     boolean statoAggiornato = OrdineDAO.updateStatoOrdine(
-                        GestioneOrdini.getOrdineSelezionato().getIdOrdine(),
+                        idOrdine,
                         EntityOrdine.StatoOrdine.ASSEGNATO // Conversione corretta
                     );
 

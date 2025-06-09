@@ -34,6 +34,7 @@ public class GestioneOrdiniTest {
 	    try {
 	        connection = DBManager.getConnection();
 	        try (Statement stmt = connection.createStatement()) {
+
 	            // Elimina le tabelle esistenti
 	            stmt.execute("DROP TABLE IF EXISTS ORDINE");
 	            stmt.execute("DROP TABLE IF EXISTS PESCHERIA");
@@ -41,6 +42,7 @@ public class GestioneOrdiniTest {
 	            // Ricrea le tabelle
 	            stmt.execute("CREATE TABLE PESCHERIA (IDPESCHERIA INT PRIMARY KEY, NOME VARCHAR(255), INDIRIZZO VARCHAR(255), EMAIL VARCHAR(255), USERNAME VARCHAR(255), PASSWORD VARCHAR(255))");
 	            stmt.execute("CREATE TABLE ORDINE (IDORDINE INT PRIMARY KEY, IDPESCHERIA INT, IDRISTORANTE INT, IDPRODOTTO INT, DATA DATE, QTA DOUBLE, QTAAGGIORNATA DOUBLE, STATO VARCHAR(255), PREZZO FLOAT)");
+
 	        }
 	        System.setOut(new PrintStream(outContent));
 	        System.setErr(new PrintStream(errContent));
