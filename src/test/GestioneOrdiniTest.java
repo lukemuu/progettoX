@@ -45,46 +45,24 @@ public class GestioneOrdiniTest {
 	        throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
 	    }
 	}
-
-
-	
+		
 	@Test
-	public void testInviaReportConUnaPescheriaEVariOrdini() throws Exception {
-	    // Inserisci una pescheria nel database
-	    try (Statement stmt = connection.createStatement()) {
-	        stmt.execute("INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) " +
-	                     "VALUES (1, 'Pescheria Test', 'Via Test, 123', 'lukeesposito03@gmail.com', 'testuser', 'testpassword')");
-	    }
-	
-	    // Inserisci vari ordini per la pescheria
-	    try (Statement stmt = connection.createStatement()) {
-	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
-	                     "VALUES (1, 1, 101, 201, '2025-06-06', 10.0, 10.0, 100.0, 'CONFERMATO')");
-	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
-	                     "VALUES (2, 1, 102, 202, '2025-06-07', 5.0, 5.0, 50.0, 'CONFERMATO')");
-	        stmt.execute("INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) " +
-	                     "VALUES (3, 1, 103, 203, '2025-06-08', 20.0, 20.0, 200.0, 'CONFERMATO')");
-	    }
-	
-	    // Assicurati che ci sia una pescheria e tre ordini
+	public void testInviaReportConZeroPescherieEZeroOrdini() throws Exception {
+	    // Assicurati che non ci siano pescherie né ordini nel database
 	    List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-	    assertEquals("Dovrebbe esserci una pescheria", 1, listaPescherie.size());
+	    assertTrue("Non dovrebbero esserci pescherie", listaPescherie.isEmpty());
 	
 	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
-	    assertEquals("Dovrebbero esserci tre ordini", 3, listaOrdini.size());
+	    assertTrue("Non dovrebbero esserci ordini", listaOrdini.isEmpty());
 	
 	    // Esegui il metodo inviaReport
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 	
-	    // Verifica che l'output su System.out contenga il messaggio di report con gli ordini
-	    String output = outContent.toString().trim();
-	    assertTrue(output.contains("Report inviato a: lukeesposito03@gmail.com (Pescheria Test)"));
-	    assertTrue(output.contains("Ordini trovati per Pescheria Test: 3"));
+	    // Verifica che l'output su System.err contenga il messaggio di errore
+	    String errorOutput = errContent.toString().trim();
+	    assertTrue(errorOutput.contains("Errore: Nessuna pescheria trovata. Il report non può essere inviato."));
 	}
-
-
-
 
 	@After
 	public void tearDown() throws Exception {
