@@ -139,13 +139,13 @@ public class GestioneOrdini {
 	        // Recupera la lista di tutti i fattorini
 	        fattorini = FattorinoDAO.readAllFattorini();
 	        
-	        System.out.println("========================================");
+	        //System.out.println("========================================");
 	        
 	        if (fattorini.isEmpty()) {
 	            System.out.println("Nessun fattorino disponibile.");
 	        }
 	        
-	        System.out.println("========================================");
+	        //System.out.println("========================================");
 	        
 	    } catch (DBConnectionException e) {
 	        System.out.println("Errore di connessione al database: " + e.getMessage());
@@ -165,7 +165,7 @@ public class GestioneOrdini {
 		try {
 			ordini = OrdineDAO.readOrdiniUltimoGiorno();
 			
-			System.out.println("========================================");
+			//System.out.println("========================================");
 			
 	        if (ordini.isEmpty()) {
 	            System.out.println("Nessun ordine disponibile.");

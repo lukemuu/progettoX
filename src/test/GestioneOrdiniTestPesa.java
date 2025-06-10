@@ -62,6 +62,7 @@ public class GestioneOrdiniTestPesa{
                          "(1, 'Mario Rossi', 'mario.rossi', 'password123', 'DISPONIBILE')");
             stmt.execute("INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) VALUES " +
                          "(1, 1, 1, 1, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONFERMATO')");
+            
         } catch (Exception e) {
             throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
         }

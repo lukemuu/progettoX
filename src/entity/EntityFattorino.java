@@ -26,6 +26,14 @@ public class EntityFattorino {
 		this.password = password;
 		this.stato = StatoFattorino.DISPONIBILE; // Stato iniziale del fattorino
 	}
+	
+	public EntityFattorino(int idFattorino, String nome, String username, String password, StatoFattorino stato) {
+		this.idFattorino = idFattorino;
+		this.nome = nome;
+		this.username = username;
+		this.password = password;
+		this.stato = stato;
+	}
 
 	public int getIdFattorino() {
 		return idFattorino;

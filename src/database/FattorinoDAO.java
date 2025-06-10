@@ -121,9 +121,12 @@ public class FattorinoDAO {
 
                 while (result.next()) {
                     EntityFattorino fattorino = new EntityFattorino(
+                        result.getInt("IDFATTORINO"),
                         result.getString("NOME"),
                         result.getString("USERNAME"),
-                        result.getString("PASSWORD")
+                        result.getString("PASSWORD"),
+                        StatoFattorino.valueOf(result.getString("STATO")) // Conversione corretta
+                        
                     );
                     fattorini.add(fattorino);
                 }
