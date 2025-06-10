@@ -116,4 +116,76 @@ public class GestioneOrdiniTestPesa{
             throw new RuntimeException("Errore durante la verifica del database: " + e.getMessage(), e);
         }
     }
+    
+
+	/*@Test
+	public void testAssegnaConsegnaIdFattorinoCarattereNonValido() {
+	    // Simula input non valido: carattere per ID fattorino
+	    String input = "a\n1\n";
+	    System.setIn(new ByteArrayInputStream(input.getBytes()));
+	
+	    // Esegui il metodo del Boundary
+	    BoundaryCooperativa.assegnaConsegna();
+	
+	    // Cattura l'output generato
+	    String output = outContent.toString();
+	
+	    // Verifica il messaggio di errore per ID fattorino
+	    assertTrue("L'output non contiene il messaggio di errore per ID fattorino. Output ricevuto: " + output,
+	               output.contains("Errore, inserire un ID valido (numero intero)."));
+	}
+	
+	@Test
+	public void testAssegnaConsegnaIdFattorinoNegativo() {
+	    // Simula input non valido: ID fattorino negativo
+	    String input = "-1\n1\n";
+	    System.setIn(new ByteArrayInputStream(input.getBytes()));
+	
+	    // Esegui il metodo del Boundary
+	    BoundaryCooperativa.assegnaConsegna();
+	
+	    // Cattura l'output generato
+	    String output = outContent.toString();
+	
+	    // Verifica il messaggio di errore per ID fattorino
+	    assertTrue("L'output non contiene il messaggio di errore per ID fattorino. Output ricevuto: " + output,
+	               output.contains("Errore, l'ID del fattorino deve essere un numero positivo."));
+	}
+	
+
+	@Test
+	public void testAssegnaConsegnaIdOrdineCarattereNonValido() {
+	    // Simula input non valido: carattere per ID ordine
+	    String input = "1\na\n";
+	    System.setIn(new ByteArrayInputStream(input.getBytes()));
+	
+	    // Esegui il metodo del Boundary
+	    BoundaryCooperativa.assegnaConsegna();
+	
+	    // Cattura l'output generato
+	    String output = outContent.toString();
+	
+	    // Verifica il messaggio di errore per ID ordine
+	    assertTrue("L'output non contiene il messaggio di errore per ID ordine. Output ricevuto: " + output,
+	               output.contains("Errore, inserire un ID valido (numero intero)."));
+	}
+	
+	@Test
+	public void testAssegnaConsegnaIdOrdineNegativo() {
+	    // Simula input non valido: ID ordine negativo
+	    String input = "1\n-1\n";
+	    System.setIn(new ByteArrayInputStream(input.getBytes()));
+	
+	    // Esegui il metodo del Boundary
+	    BoundaryCooperativa.assegnaConsegna();
+	
+	    // Cattura l'output generato
+	    String output = outContent.toString();
+	
+	    // Verifica il messaggio di errore per ID ordine
+	    assertTrue("L'output non contiene il messaggio di errore per ID ordine. Output ricevuto: " + output,
+	               output.contains("Errore, l'ID dell'ordine deve essere un numero positivo."));
+	}*/
+
+
 }

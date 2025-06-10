@@ -97,37 +97,37 @@ public class GestioneOrdini {
 
 
 
-public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
-
-    // Recupera la lista degli ordini in trattativa per la pescheria specificata
-    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
-
-    // Cerca l'ordine con l'ID specificato
-    EntityOrdine ordineDaModificare = null;
-    for (EntityOrdine ordine : listaOrdini) {
-        if (ordine.getIdOrdine() == idOrdine) {
-            ordineDaModificare = ordine;
-            break;
-        }
-    }
-
-    if (ordineDaModificare == null) {
-        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
-    }
-
-    // Aggiorna la quantità e il prezzo nell'oggetto ordine
-    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
-    ordineDaModificare.setPrezzo(nuovoPrezzo);
-
-    // Aggiorna l'ordine nel database
-    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
-
-    if (!successo) {
-        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
-    }
-
-    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
-}
+	public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {
+	
+	    // Recupera la lista degli ordini in trattativa per la pescheria specificata
+	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdinibyPescheria_inTrattativa(idPescheria);
+	
+	    // Cerca l'ordine con l'ID specificato
+	    EntityOrdine ordineDaModificare = null;
+	    for (EntityOrdine ordine : listaOrdini) {
+	        if (ordine.getIdOrdine() == idOrdine) {
+	            ordineDaModificare = ordine;
+	            break;
+	        }
+	    }
+	
+	    if (ordineDaModificare == null) {
+	        throw new OperationException("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata.");
+	    }
+	
+	    // Aggiorna la quantità e il prezzo nell'oggetto ordine
+	    ordineDaModificare.setQtaAggiornata(quantitaAggiornata);
+	    ordineDaModificare.setPrezzo(nuovoPrezzo);
+	
+	    // Aggiorna l'ordine nel database
+	    boolean successo = OrdineDAO.updateOrdine(ordineDaModificare);
+	
+	    if (!successo) {
+	        throw new OperationException("Errore durante l'aggiornamento dell'ordine.");
+	    }
+	
+	    System.out.println("Ordine aggiornato con successo: ID Ordine = " + idOrdine + ", Nuova Quantità = " + quantitaAggiornata + ", Nuovo Prezzo = " + nuovoPrezzo);
+	}
 
 
 	
@@ -171,7 +171,7 @@ public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiorn
 	            System.out.println("Nessun ordine disponibile.");
 	        }
 	        
-	        System.out.println("========================================");
+	        //System.out.println("========================================");
 	        
 		} catch (DBConnectionException e) {
 			System.out.println("Errore di connessione al database: " + e.getMessage());
@@ -320,24 +320,23 @@ public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiorn
     }
     
 
-public void confermaOrdine(int idOrdine) throws OperationException {
-    try {
-        // Converte la stringa "Confermato" nel valore dell'enum EntityOrdine.StatoOrdine
-        EntityOrdine.StatoOrdine statoConfermato = EntityOrdine.StatoOrdine.valueOf("CONFERMATO");
+	public void confermaOrdine(int idOrdine) throws OperationException {
+	    try {
+	        // Converte la stringa "Confermato" nel valore dell'enum EntityOrdine.StatoOrdine
+	        EntityOrdine.StatoOrdine statoConfermato = EntityOrdine.StatoOrdine.valueOf("CONFERMATO");
+	
+	        // Aggiorna lo stato dell'ordine a "Confermato"
+	        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, statoConfermato);
+	        if (!statoAggiornato) {
+	            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
+	        }
+	    } catch (IllegalArgumentException e) {
+	        throw new OperationException("Valore dello stato non valido: " + e.getMessage());
+	    } catch (DBConnectionException dbEx) {
+	        throw new OperationException("Errore di connessione al database");
+	    } catch (DAOException ex) {
+	        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
+	    }
+	}
 
-        // Aggiorna lo stato dell'ordine a "Confermato"
-        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, statoConfermato);
-        if (!statoAggiornato) {
-            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
-        }
-    } catch (IllegalArgumentException e) {
-        throw new OperationException("Valore dello stato non valido: " + e.getMessage());
-    } catch (DBConnectionException dbEx) {
-        throw new OperationException("Errore di connessione al database");
-    } catch (DAOException ex) {
-        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
-    }
-}
-
- 
 }
