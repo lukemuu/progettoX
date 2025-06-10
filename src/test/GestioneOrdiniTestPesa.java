@@ -65,6 +65,7 @@ public class GestioneOrdiniTestPesa{
         } catch (Exception e) {
             throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
         }
+        outContent.reset(); // Resetta il contenuto dell'output catturato
     }
 
     @After
@@ -118,7 +119,7 @@ public class GestioneOrdiniTestPesa{
     }
     
 
-	/*@Test
+	@Test
 	public void testAssegnaConsegnaIdFattorinoCarattereNonValido() {
 	    // Simula input non valido: carattere per ID fattorino
 	    String input = "a\n1\n";
@@ -185,7 +186,60 @@ public class GestioneOrdiniTestPesa{
 	    // Verifica il messaggio di errore per ID ordine
 	    assertTrue("L'output non contiene il messaggio di errore per ID ordine. Output ricevuto: " + output,
 	               output.contains("Errore, l'ID dell'ordine deve essere un numero positivo."));
-	}*/
+	}
+    
 
+    @Test
+    public void testStampaListaFattoriniNonDisponibili() {
+        // Popola il database con fattorini non disponibili
+        try (Connection connection = DBManager.getConnection();
+             Statement stmt = connection.createStatement()) {
+            stmt.execute("DELETE FROM FATTORINO"); // Pulisce la tabella
+            stmt.execute("INSERT INTO FATTORINO (IDFATTORINO, NOME, USERNAME, PASSWORD, STATO) VALUES " +
+                         "(1, 'Mario Rossi', 'mario.rossi', 'password123', 'OCCUPATO'), " +
+                         "(2, 'Luigi Bianchi', 'luigi.bianchi', 'password456', 'OCCUPATO')");
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
+        }
+
+        // Esegui il metodo del Control tramite il Boundary
+        BoundaryCooperativa.assegnaConsegna();
+
+        // Cattura l'output generato
+        String output = outContent.toString();
+
+        // Verifica che l'output contenga il messaggio di lista vuota
+        assertTrue("L'output non contiene il messaggio di lista vuota. Output ricevuto: " + output,
+                   output.contains("Nessun fattorino disponibile."));
+    }
+    
+
+    @Test
+    public void testStampaListaOrdiniNonDisponibili() {
+        // Popola il database con ordini non disponibili
+        try (Connection connection = DBManager.getConnection();
+             Statement stmt = connection.createStatement()) {
+            stmt.execute("DELETE FROM ORDINE"); // Pulisce la tabella
+            stmt.execute("INSERT INTO ORDINE (IDORDINE, IDRISTORANTE, IDPESCHERIA, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, PREZZO, STATO) VALUES " +
+                         "(1, 1, 1, 1, CURRENT_DATE, 10.0, 10.0, 50.0, 'CONSEGNATO'), " +
+                         "(2, 2, 2, 2, CURRENT_DATE, 5.0, 5.0, 25.0, 'CONSEGNATO')");
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante la configurazione del database: " + e.getMessage(), e);
+        }
+
+        // Simula l'inserimento di idFattorino = 1
+        String input = "2\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // Esegui il metodo del Boundary
+        BoundaryCooperativa.assegnaConsegna();
+
+        // Cattura l'output generato
+        String output = outContent.toString();
+
+        // Verifica che l'output contenga il messaggio di lista vuota
+        assertTrue("L'output non contiene il messaggio di lista vuota. Output ricevuto: " + output,
+                   output.contains("Nessun ordine disponibile."));
+    }
 
 }
