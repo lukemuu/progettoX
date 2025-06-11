@@ -13,7 +13,7 @@ import java.sql.Statement;
 import boundary.BoundaryCooperativa;
 import database.DBManager;
 
-public class GestioneOrdiniTestPesa{
+public class AssegnaConsegneTest{
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;

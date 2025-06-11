@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import database.DBManager;
 
-public class GestioneOrdiniTestPigi {
+public class ModificaOrdineTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;

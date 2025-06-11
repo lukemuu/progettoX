@@ -19,7 +19,7 @@ import entity.EntityPescheria;
 import control.GestioneOrdini;
 import java.util.List;
 
-public class GestioneOrdiniTest {
+public class InviaReportTest {
 
     private Connection connection;
 
