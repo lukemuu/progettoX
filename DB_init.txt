@@ -59,10 +59,3 @@ DATA DATE,
 FOREIGN KEY (IDFATTORINO) REFERENCES FATTORINO(IDFATTORINO)
 );
 
--- Inserimenti di esempio
-INSERT INTO RISTORANTEREGISTRATO VALUES (NULL, 'Ristorante Bella Italia', 'bella.italia', 'password123', 'Via Roma 10', '1234567890', 'info@bellaitalia.com');
-INSERT INTO FATTORINO VALUES (NULL, 'Mario Rossi', 'mario.rossi', 'password123', 'DISPONIBILE');
-INSERT INTO PESCHERIA VALUES (NULL, 'Pescheria Mare Blu', 'Via Mare 20', 'mareblu@gmail.com', 'mare.blu', 'password456');
-INSERT INTO PRODOTTO VALUES (NULL, 'Pesce', 'Orata', 'Orata fresca', 15.50, 'IT', 1);
-INSERT INTO ORDINE VALUES (NULL, 1, 1, 1, '2023-10-01', 10.0, 10.0, 155.0, 'CONFERMATO');
-INSERT INTO CONSEGNA VALUES (NULL, 1, '2023-10-02');
