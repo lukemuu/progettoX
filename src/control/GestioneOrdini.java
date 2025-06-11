@@ -267,7 +267,7 @@ public class GestioneOrdini {
             returnList.set(0, String.valueOf(prezzoTotale));
             
             
-            // Creazione ordine temporaneo
+            // Creazione ordine 
             EntityOrdine nuovoOrdine = new EntityOrdine(
             	    idRistorante,          // ID del ristorante (da aggiungere come parametro)
             	    idPescheria,
@@ -277,7 +277,7 @@ public class GestioneOrdini {
             	    prezzoTotale
             	);
  
-            // Salva l'ordine temporaneo  in una lista temporanea
+            // Salva l'ordine in stato "In trattativa" nel database
             OrdineDAO.createOrdine(nuovoOrdine);
 
             // Aggiungi l'ID dell'ordine alla lista di ritorno

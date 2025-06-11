@@ -118,7 +118,7 @@ public class BoundaryRistorante {
 	            }
 
 	            System.out.println("Ordine confermato con successo!");
-	            System.out.println("Prezzo totale: " + prezzo + " euro");
+	            
 	            
 	            int idOrdine = Integer.parseInt(results.get(2));
 	           
