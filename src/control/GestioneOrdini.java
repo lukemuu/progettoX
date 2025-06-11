@@ -88,8 +88,6 @@ public class GestioneOrdini {
 	}
 
 
-
-
     private String creaReportOrdini(String nomePescheria, List<EntityOrdine> ordini) {
         StringBuilder corpoEmail = new StringBuilder();
         corpoEmail.append("<html><body>");

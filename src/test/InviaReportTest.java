@@ -35,11 +35,9 @@ public class InviaReportTest {
 	        connection = DBManager.getConnection();
 	        try (Statement stmt = connection.createStatement()) {
 
-	            // Elimina le tabelle esistenti
 	            stmt.execute("DROP TABLE IF EXISTS ORDINE");
 	            stmt.execute("DROP TABLE IF EXISTS PESCHERIA");
 	
-	            // Ricrea le tabelle
 	            stmt.execute("CREATE TABLE PESCHERIA (IDPESCHERIA INT PRIMARY KEY, NOME VARCHAR(255), INDIRIZZO VARCHAR(255), EMAIL VARCHAR(255), USERNAME VARCHAR(255), PASSWORD VARCHAR(255))");
 	            stmt.execute("CREATE TABLE ORDINE (IDORDINE INT PRIMARY KEY, IDPESCHERIA INT, IDRISTORANTE INT, IDPRODOTTO INT, DATA DATE, QTA DOUBLE, QTAAGGIORNATA DOUBLE, STATO VARCHAR(255), PREZZO FLOAT)");
 
@@ -53,7 +51,6 @@ public class InviaReportTest {
 	    errContent.reset();
 	}
 
-    // Metodo helper per inserire pescheria tramite query
     private void insertPescheria(int id, String nome, String indirizzo, String email, String username, String password) throws Exception {
         String sql = "INSERT INTO PESCHERIA (IDPESCHERIA, NOME, INDIRIZZO, EMAIL, USERNAME, PASSWORD) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -67,7 +64,6 @@ public class InviaReportTest {
         }
     }
 
-    // Metodo helper per inserire ordine tramite query
     private void insertOrdine(int idOrdine, int idPescheria, int idRistorante, int idProdotto, String data, double qta, double qtaAggiornata, String stato, float prezzo) throws Exception {
         String sql = "INSERT INTO ORDINE (IDORDINE, IDPESCHERIA, IDRISTORANTE, IDPRODOTTO, DATA, QTA, QTAAGGIORNATA, STATO, PREZZO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -94,11 +90,10 @@ public class InviaReportTest {
         List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
         assertTrue("Non dovrebbero esserci ordini", listaOrdini.isEmpty());
 
-        // Act
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
         gestioneOrdini.inviaReport();
 
-        // Output Attesi: "Errore: Nessuna pescheria trovata. Il report non può essere inviato."
+        // Output Attesi
         String errorOutput = errContent.toString().trim();
         assertTrue("Dovrebbe stampare messaggio di errore per nessuna pescheria", 
                    errorOutput.contains("Errore: Nessuna pescheria trovata"));
@@ -119,7 +114,6 @@ public class InviaReportTest {
 	    List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
 	    assertTrue("Non dovrebbero esserci ordini", listaOrdini.isEmpty());
 
-	    // Act
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 
@@ -141,13 +135,9 @@ public class InviaReportTest {
     @Test
     public void testCase3_UnaPescheriaUnOrdine() throws Exception {
         // Pre-condizioni: Database con una pescheria e un ordine corrispondente
-        // Setup pescheria
         insertPescheria(1, "Pescheria O'Sole Mio", "via dei mille, 39", "pescheriasolemio@gmail.com", "pescheriasolemio10", "Maradona10");
-
-        // Setup ordine
         insertOrdine(1, 1, 1, 1, "2025-06-05", 2.5, 1.0, "CONFERMATO", 10.5f);
 
-        // Act
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
         gestioneOrdini.inviaReport();
 
@@ -169,15 +159,11 @@ public class InviaReportTest {
     @Test
     public void testCase4_UnaPescheriaPiuOrdini() throws Exception {
         // Pre-condizioni: Database con una pescheria e più ordini corrispondenti
-        // Setup pescheria
         insertPescheria(1, "Pescheria O'Sole Mio", "via dei mille, 39", "pescheriasolemio@gmail.com", "pescheriasolemio10", "Maradona10");
-
-        // Setup multipli ordini
         insertOrdine(1, 1, 15, 34, "2025-06-05", 2.5, 1.0, "CONFERMATO", 10.5f);
         insertOrdine(2, 1, 1, 22, "2025-06-06", 4.5, 2.0, "CONFERMATO", 20.0f);
         insertOrdine(3, 1, 42, 26, "2025-06-08", 5.0, 2.0, "CONFERMATO", 10.0f);
 
-        // Act
         GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
         gestioneOrdini.inviaReport();
 
@@ -203,13 +189,11 @@ public class InviaReportTest {
 	    insertPescheria(1, "Pescheria O'Sole Mio", "via dei mille, 39", "pescheriasolemio@gmail.com", "pescheriasolemio10", "Maradona10");
 	    insertPescheria(2, "Pescheria La Paranza", "via Roma, 100", "pescheriaparanza@libero.it", "pescheriaparanza6", "Ciro2009");
 	
-	    // Act
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 	
 	    // Output generato
 	    String output = outContent.toString();
-	    System.out.println("Output generato:\n" + output);
 	
 	    // Verifiche
 	    assertTrue("Dovrebbe indicare la pescheria correttamente",
@@ -236,13 +220,11 @@ public class InviaReportTest {
 	    insertPescheria(2, "Pescheria La Paranza", "via Roma, 100", "pescheriaparanza@libero.it", "pescheriaparanza6", "Ciro2009");
 	    insertOrdine(1, 1, 1, 1, "2025-06-05", 2.5, 1.0, "CONFERMATO", 10.5f);
 	
-	    // Act
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 	
 	    // Output generato
 	    String output = outContent.toString();
-	    System.out.println("Output generato:\n" + output);
 	
 	    // Verifiche
 	    assertTrue("Dovrebbe indicare la pescheria correttamente",
@@ -271,13 +253,11 @@ public class InviaReportTest {
         insertOrdine(2, 1, 12, 22, "2025-06-06", 4.5, 2.0, "CONFERMATO", 20.0f);
         insertOrdine(3, 1, 42, 26, "2025-06-08", 5.0, 1.0, "CONFERMATO", 10.0f);
 	
-	    // Act
 	    GestioneOrdini gestioneOrdini = GestioneOrdini.getInstance();
 	    gestioneOrdini.inviaReport();
 	
 	    // Output generato
 	    String output = outContent.toString();
-	    System.out.println("Output generato:\n" + output);
 	
 	    // Verifiche
 	    assertTrue("Dovrebbe indicare la pescheria correttamente",
