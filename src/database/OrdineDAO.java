@@ -269,7 +269,7 @@ public class OrdineDAO {
 
 	    try {
 	        Connection conn = DBManager.getConnection();
-	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE AND STATO = ?;";
+	        String query = "SELECT * FROM ORDINE WHERE DATA = CURRENT_DATE - INTERVAL 1 DAY AND STATO = ?;";
 
 	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 	            // Imposta il parametro della query
