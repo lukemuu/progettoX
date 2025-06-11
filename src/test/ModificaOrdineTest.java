@@ -65,30 +65,30 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineInputValidi() {
-        // Simula input validi
+        
         String input = "1\n1\n5.0\n100.0\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        // Esegui il metodo del Boundary
+        
         BoundaryPescheria.modificaOrdine();
 
-        // Cattura l'output generato
+        
         String output = outContent.toString();
 
-        // Stampa l'output per il debug
+        
         System.out.println("Output generato:\n" + output);
 
-        // Verifica che l'output contenga "Ordine aggiornato con successo"
+        
         assertTrue("L'output non contiene 'Ordine aggiornato con successo'. Output ricevuto: " + output,
                    output.contains("Ordine aggiornato con successo"));
     }*/
 
     /*@Test
     public void testModificaOrdineIdPescheriaNegativo() {
-        String input = "-1\n1\n5.0\n100.0\n"; // ID pescheria negativo
+        String input = "-1\n1\n5.0\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, l'ID della pescheria deve essere un numero positivo."));
@@ -96,10 +96,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineIdPescheriaNonIntero() {
-        String input = "@\n1\n5.0\n100.0\n"; // ID pescheria non intero
+        String input = "@\n1\n5.0\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, inserire un ID valido (numero intero)."));
@@ -107,10 +107,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineIdOrdineNegativo() {
-        String input = "1\n-1\n5.0\n100.0\n"; // ID ordine negativo
+        String input = "1\n-1\n5.0\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, l'ID dell'ordine deve essere un numero positivo."));
@@ -118,10 +118,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineIdOrdineNonIntero() {
-        String input = "1\n@\n5.0\n100.0\n"; // ID ordine non intero
+        String input = "1\n@\n5.0\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, inserire un ID valido (numero intero)."));
@@ -129,10 +129,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineQuantitaAggiornataNegativa() {
-        String input = "1\n1\n-5.0\n100.0\n"; // Quantità aggiornata negativa
+        String input = "1\n1\n-5.0\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, la quantità deve essere un numero positivo."));
@@ -140,10 +140,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdineQuantitaAggiornataNonDouble() {
-        String input = "1\n1\n@\n100.0\n"; // Quantità aggiornata non double
+        String input = "1\n1\n@\n100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, inserire un numero valido."));
@@ -151,10 +151,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdinePrezzoNegativo() {
-        String input = "1\n1\n5.0\n-100.0\n"; // Prezzo negativo
+        String input = "1\n1\n5.0\n-100.0\n"; 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, il prezzo deve essere un valore positivo."));
@@ -162,10 +162,10 @@ public class ModificaOrdineTest {
 
     /*@Test
     public void testModificaOrdinePrezzoNonFloat() {
-        String input = "1\n1\n5.0\n@\n"; // Prezzo non float
+        String input = "1\n1\n5.0\n@\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        BoundaryPescheria.modificaOrdine(); // Esegui il metodo del Boundary
+        BoundaryPescheria.modificaOrdine(); 
 
         String output = outContent.toString();
         assertTrue(output.contains("Errore, inserire un valore valido."));
@@ -174,17 +174,17 @@ public class ModificaOrdineTest {
 
 	@Test
 	public void testModificaOrdineNessunOrdineTrovato() {
-	    // Simula input validi ma senza corrispondenza nel database
-	    String input = "999\n1\n5.0\n100.0\n"; // ID pescheria inesistente
+	    
+	    String input = "999\n1\n5.0\n100.0\n"; 
 	    System.setIn(new ByteArrayInputStream(input.getBytes()));
 	
-	    // Esegui il metodo del Boundary
+	    
 	    BoundaryPescheria.modificaOrdine();
 	
-	    // Cattura l'output generato
+	    
 	    String output = outContent.toString();
 	
-	    // Verifica che l'output contenga il messaggio di errore
+	    
 	    assertTrue(output.contains("Nessun ordine trovato con l'ID specificato in stato 'In trattativa' per la pescheria indicata."));
 	}
 
