@@ -90,7 +90,7 @@ public class GestioneOrdini {
 
 
 
-    public static String creaReportOrdini(String nomePescheria, List<EntityOrdine> ordini) {
+    private String creaReportOrdini(String nomePescheria, List<EntityOrdine> ordini) {
         StringBuilder corpoEmail = new StringBuilder();
         corpoEmail.append("<html><body>");
         corpoEmail.append("<h3>Gentile ").append(nomePescheria).append(",</h3>");
@@ -120,7 +120,7 @@ public class GestioneOrdini {
         return corpoEmail.toString();
     }
 
-    public static String creaReportVuoto(String nomePescheria) {
+    private String creaReportVuoto(String nomePescheria) {
         return "<html><body>" +
                 "<h3>Gentile " + nomePescheria + ",</h3>" +
                 "<p>Non sono stati registrati ordini negli ultimi 7 giorni.</p>" +
@@ -339,9 +339,13 @@ public class GestioneOrdini {
 
             // Recupera l'e-mail della pescheria
             String emailPescheria = pescheria.getEmail();
+            
+            String oggetto = "Nuovo Ordine";
+            String corpoEmail = creaCorpoEmail(codProdotto, quantita, idOrdine, prezzo);
+
 
             try {
-                emailService.inviaMail(emailPescheria, codProdotto, quantita,idOrdine,prezzo);
+                emailService.inviaEmail(emailPescheria, oggetto, corpoEmail);
             } catch (MessagingException e) {
                 throw new OperationException("Errore durante l'invio dell'e-mail: " + e.getMessage());
             }
@@ -369,6 +373,22 @@ public class GestioneOrdini {
 	    } catch (DAOException ex) {
 	        throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine");
 	    }
+	}
+	
+	private String creaCorpoEmail(int codProdotto, double quantita, int idOrdine, float prezzo) {
+	    StringBuilder corpoEmail = new StringBuilder();
+	    corpoEmail.append("<html><body>");
+	    corpoEmail.append("<p>Gentile Pescheria,</p>");
+	    corpoEmail.append("<p>È stato effettuato un ordine con i seguenti dettagli:</p>");
+	    corpoEmail.append("<ul>");
+	    corpoEmail.append("<li><b>ID Ordine:</b> ").append(idOrdine).append("</li>");
+	    corpoEmail.append("<li><b>Codice Prodotto:</b> ").append(codProdotto).append("</li>");
+	    corpoEmail.append("<li><b>Quantità:</b> ").append(quantita).append("</li>");
+	    corpoEmail.append("<li><b>Prezzo:</b> €").append(String.format("%.2f", prezzo)).append("</li>");
+	    corpoEmail.append("</ul>");
+	    corpoEmail.append("<p>Cordiali saluti,<br>Il Team</p>");
+	    corpoEmail.append("</body></html>");
+	    return corpoEmail.toString();
 	}
 
 }
