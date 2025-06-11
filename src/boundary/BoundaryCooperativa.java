@@ -59,7 +59,8 @@ public class BoundaryCooperativa {
 	
 
 	public static void assegnaConsegna() {
-	    Scanner scanner = new Scanner(System.in);
+	    // RIMUOVI questo scanner locale - usa solo quello statico
+	    // Scanner scanner = new Scanner(System.in);
 	
 	    try {
 	        List<EntityFattorino> fattorini = GestioneOrdini.stampaListaFattorini();
@@ -76,7 +77,7 @@ public class BoundaryCooperativa {
 	        while (!inputValidoFattorino) {
 	            try {
 	                System.out.println("Inserisci l'ID del fattorino:");
-	                sceltaFattorino = Integer.parseInt(scan.nextLine());
+	                sceltaFattorino = Integer.parseInt(scan.nextLine()); // Usa scan statico
 
 	                if (sceltaFattorino > 0) {
 	                    inputValidoFattorino = true;
@@ -88,9 +89,6 @@ public class BoundaryCooperativa {
 	            }
 	        }
 	        
-	        //EntityFattorino fattorinoSelezionato = fattorini.get(sceltaFattorino - 1);
-	        
-	
 	        List<EntityOrdine> ordini = GestioneOrdini.stampaListaOrdini();
 	
 	        System.out.println("Seleziona un ordine dall'elenco:");
@@ -101,11 +99,11 @@ public class BoundaryCooperativa {
 	        
 	        boolean inputValidoOrdine = false;
 	        int sceltaOrdine = 0;
-	
+
 	        while (!inputValidoOrdine) {
 	            try {
 	                System.out.println("Inserisci l'ID dell'ordine:");
-	                sceltaOrdine = Integer.parseInt(scan.nextLine());
+	                sceltaOrdine = Integer.parseInt(scan.nextLine()); // Usa scan statico
 
 	                if (sceltaOrdine > 0) {
 	                    inputValidoOrdine = true;
@@ -116,14 +114,12 @@ public class BoundaryCooperativa {
 	                System.out.println("Errore, inserire un ID valido (numero intero).");
 	            }
 	        }
-	        
-	        //EntityOrdine ordineSelezionato = ordini.get(sceltaOrdine - 1);
 
 	        // Passa le scelte a GestioneOrdini
 	        GestioneOrdini.assegnaConsegna(sceltaOrdine, sceltaFattorino);
-	
+
 	        System.out.println("Consegna assegnata con successo! ... Preso a carico " + sceltaOrdine + ". La consegna verrà effettuata da " + sceltaFattorino + " il prima possibile.");
-	
+
 	    } catch (DAOException e) {
 	        System.err.println("Errore durante l'assegnazione della consegna: " + e.getMessage());
 	    } catch (OperationException e) {
@@ -132,10 +128,8 @@ public class BoundaryCooperativa {
 	        System.err.println("Errore di connessione al database: " + e.getMessage());
 	    } catch (Exception e) {
 	        System.err.println("Errore imprevisto: " + e.getMessage());
-	    } finally {
-	        scanner.close();
 	    }
+	    // RIMUOVI il finally che chiude scanner
 	}
-
 }
  

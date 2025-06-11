@@ -38,53 +38,49 @@ public class GestioneOrdini {
 		return gO; 
 	}
 
+	
+	
 	public void inviaReport() {
 	    try {
-	        // Ottieni la lista delle pescherie
 	        List<EntityPescheria> listaPescherie = PescheriaDAO.readPescherie();
-	
-	        // Controlla se non ci sono pescherie
 	        if (listaPescherie == null || listaPescherie.isEmpty()) {
 	            System.err.println("Errore: Nessuna pescheria trovata. Il report non può essere inviato.");
 	            return;
 	        }
 	
-	        // Ottieni la lista degli ordini degli ultimi 7 giorni
 	        List<EntityOrdine> listaOrdini = OrdineDAO.readOrdiniReport();
-	
-	        // Configura il servizio email
 	        EmailService emailService = new EmailService();
 	
-
-			for (EntityPescheria pescheria : listaPescherie) {
-			    String email = pescheria.getEmail();
-			    String nomePescheria = pescheria.getNome();
-			    int idPescheria = pescheria.getIdPescheria();
-			
-			    System.out.println("Pescheria: " + nomePescheria + " (ID: " + idPescheria + ")");
-			
-			    // Filtra gli ordini per questa pescheria
-			    List<EntityOrdine> ordiniPescheria = new ArrayList<>();
-			    for (EntityOrdine ordine : listaOrdini) {
-					if (ordine.getIdPescheria() == pescheria.getIdPescheria()) {
-					    ordiniPescheria.add(ordine);
-					}
-			    }
-			
-			    System.out.println("Ordini trovati per " + nomePescheria + ": " + ordiniPescheria.size());
-			
-			    try {
-			        if (ordiniPescheria.isEmpty()) {
-			            emailService.inviaReportVuoto(email, nomePescheria);
-			            System.out.println("Report vuoto inviato a: " + email);
-			        } else {
-			            emailService.inviaReportOrdini(email, nomePescheria, ordiniPescheria);
-			            System.out.println("Report dettagliato inviato a: " + email);
-			        }
-			    } catch (MessagingException e) {
-			        System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
-			    }
-
+	        for (EntityPescheria pescheria : listaPescherie) {
+	            String email = pescheria.getEmail();
+	            String nomePescheria = pescheria.getNome();
+	            int idPescheria = pescheria.getIdPescheria();
+	
+	            System.out.println("Pescheria: " + nomePescheria + " (ID: " + idPescheria + ")");
+	
+	            List<EntityOrdine> ordiniPescheria = new ArrayList<>();
+	            for (EntityOrdine ordine : listaOrdini) {
+	                if (ordine.getIdPescheria() == idPescheria) {
+	                    ordiniPescheria.add(ordine);
+	                }
+	            }
+	
+	            System.out.println("Ordini trovati per " + nomePescheria + ": " + ordiniPescheria.size());
+	
+	            try {
+	                String corpoEmail;
+	                String oggetto = "Report ordini - " + nomePescheria;
+	                if (ordiniPescheria.isEmpty()) {
+	                    corpoEmail = creaReportVuoto(nomePescheria);
+	                    System.out.println("Report vuoto inviato a: " + email);
+	                } else {
+	                    corpoEmail = creaReportOrdini(nomePescheria, ordiniPescheria);
+	                    System.out.println("Report dettagliato inviato a: " + email);
+	                }
+	                emailService.inviaEmail(email, oggetto, corpoEmail);
+	            } catch (MessagingException e) {
+	                System.err.println("Errore nell'invio dell'email a " + email + ": " + e.getMessage());
+	            }
 	        }
 	    } catch (DAOException | DBConnectionException e) {
 	        System.err.println("Errore durante l'elaborazione del report: " + e.getMessage());
@@ -92,9 +88,45 @@ public class GestioneOrdini {
 	}
 
 
- 
-    
 
+
+    public static String creaReportOrdini(String nomePescheria, List<EntityOrdine> ordini) {
+        StringBuilder corpoEmail = new StringBuilder();
+        corpoEmail.append("<html><body>");
+        corpoEmail.append("<h3>Gentile ").append(nomePescheria).append(",</h3>");
+        corpoEmail.append("<p>Ecco il report degli ordini:</p>");
+        corpoEmail.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
+        corpoEmail.append("<tr>")
+                  .append("<th>ID Ordine</th>")
+                  .append("<th>Data</th>")
+                  .append("<th>ID Prodotto</th>")
+                  .append("<th>Quantità</th>")
+                  .append("<th>Quantità Aggiornata</th>")
+                  .append("</tr>");
+
+        for (EntityOrdine ordine : ordini) {
+            corpoEmail.append("<tr>")
+                      .append("<td>").append(ordine.getIdOrdine()).append("</td>")
+                      .append("<td>").append(ordine.getData()).append("</td>")
+                      .append("<td>").append(ordine.getIdProdotto()).append("</td>")
+                      .append("<td>").append(ordine.getQta()).append("</td>")
+                      .append("<td>").append(ordine.getQtaAggiornata()).append("</td>")
+                      .append("</tr>");
+        }
+
+        corpoEmail.append("</table>");
+        corpoEmail.append("<p>Cordiali saluti,<br>Il Team</p>");
+        corpoEmail.append("</body></html>");
+        return corpoEmail.toString();
+    }
+
+    public static String creaReportVuoto(String nomePescheria) {
+        return "<html><body>" +
+                "<h3>Gentile " + nomePescheria + ",</h3>" +
+                "<p>Non sono stati registrati ordini negli ultimi 7 giorni.</p>" +
+                "<p>Cordiali saluti,<br>Il Team</p>" +
+                "</body></html>";
+    }
 
 
 	public void modificaOrdine(int idPescheria, int idOrdine, Double quantitaAggiornata, float nuovoPrezzo) throws OperationException, DAOException, DBConnectionException {

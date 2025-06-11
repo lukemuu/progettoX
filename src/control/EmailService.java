@@ -22,18 +22,14 @@ public class EmailService {
 	    this.tlsEnabled = true;
 	}
  
- 
- 
 
-public void inviaReportOrdini(String destinatario, String nomePescheria, List<EntityOrdine> ordini) throws MessagingException {
-    // Configurazione delle proprietà per il server SMTP
+public void inviaEmail(String destinatario, String oggetto, String corpoEmail) throws MessagingException {
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", String.valueOf(tlsEnabled));
     props.put("mail.smtp.host", host);
     props.put("mail.smtp.port", String.valueOf(port));
 
-    // Creazione della sessione con autenticazione
     Session session = Session.getInstance(props, new Authenticator() {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
@@ -41,95 +37,16 @@ public void inviaReportOrdini(String destinatario, String nomePescheria, List<En
         }
     });
 
-    // Creazione del messaggio email
     Message message = new MimeMessage(session);
     message.setFrom(new InternetAddress(username));
     message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-    message.setSubject("Report ordini - " + nomePescheria);
-
-    // Corpo dell'email in formato HTML
-    StringBuilder corpoEmail = new StringBuilder();
-    corpoEmail.append("<html><body>");
-    corpoEmail.append("<h3>Gentile ").append(nomePescheria).append(",</h3>");
-    corpoEmail.append("<p>Ecco il report degli ordini:</p>");
-    corpoEmail.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
-    corpoEmail.append("<tr>")
-              .append("<th>ID Ordine</th>")
-              .append("<th>Data</th>")
-              .append("<th>ID Prodotto</th>")
-              .append("<th>Quantità</th>")
-              .append("<th>Quantità Aggiornata</th>")
-              .append("</tr>");
-
-    for (EntityOrdine ordine : ordini) {
-        corpoEmail.append("<tr>")
-                  .append("<td>").append(ordine.getIdOrdine()).append("</td>")
-                  .append("<td>").append(ordine.getData()).append("</td>")
-                  .append("<td>").append(ordine.getIdProdotto()).append("</td>")
-                  .append("<td>").append(ordine.getQta()).append("</td>")
-                  .append("<td>").append(ordine.getQtaAggiornata()).append("</td>")
-                  .append("</tr>");
-    }
-
-    corpoEmail.append("</table>");
-    corpoEmail.append("<p>Cordiali saluti,<br>Il Team</p>");
-    corpoEmail.append("</body></html>");
-
-    // Imposta il contenuto HTML nel messaggio
-    message.setContent(corpoEmail.toString(), "text/html; charset=utf-8");
-
-    // Invio dell'email
-    Transport.send(message);
-}
-
-
-
-
-public void inviaReportVuoto(String destinatario, String nomePescheria) throws MessagingException {
-    if (destinatario == null || destinatario.isEmpty()) {
-        throw new MessagingException("Il destinatario dell'email è nullo o vuoto.");
-    }
-
-    // Configurazione delle proprietà per il server SMTP
-    Properties props = new Properties();
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", String.valueOf(tlsEnabled));
-    props.put("mail.smtp.host", host);
-    props.put("mail.smtp.port", String.valueOf(port));
-
-    // Creazione della sessione con autenticazione
-    Session session = Session.getInstance(props, new Authenticator() {
-        @Override
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(username, password);
-        }
-    });
-
-    // Creazione del messaggio email
-    Message message = new MimeMessage(session);
-    message.setFrom(new InternetAddress(username));
-    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-    message.setSubject("Report ordini - " + nomePescheria);
-
-    // Corpo dell'email
-    String corpoEmail = "<html><body>" +
-            "<h3>Gentile " + nomePescheria + ",</h3>" +
-            "<p>Non sono stati registrati ordini negli ultimi 7 giorni.</p>" +
-            "<p>Cordiali saluti,<br>Il Team</p>" +
-            "</body></html>";
-
-    // Imposta il contenuto HTML nel messaggio
+    message.setSubject(oggetto);
     message.setContent(corpoEmail, "text/html; charset=utf-8");
 
-    // Log per debug
-    System.out.println("Invio email a: " + destinatario);
-    System.out.println("Oggetto: Report ordini - " + nomePescheria);
-
-    // Invio dell'email
     Transport.send(message);
 }
 
-
+ 
 
 public void inviaMail(String emailPescheria, int codProdotto, double quantita,int idOrdine,float prezzo) throws MessagingException {
     // Configurazione delle proprietà per il server SMTP
