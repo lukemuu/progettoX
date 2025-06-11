@@ -169,13 +169,13 @@ public class GestioneOrdini {
 	        // Recupera la lista di tutti i fattorini
 	        fattorini = FattorinoDAO.readAllFattorini();
 	        
-	        //System.out.println("========================================");
+	        System.out.println("========================================");
 	        
 	        if (fattorini.isEmpty()) {
 	            System.out.println("Nessun fattorino disponibile.");
 	        }
 	        
-	        //System.out.println("========================================");
+	        System.out.println("========================================");
 	        
 	    } catch (DBConnectionException e) {
 	        System.out.println("Errore di connessione al database: " + e.getMessage());
@@ -195,13 +195,13 @@ public class GestioneOrdini {
 		try {
 			ordini = OrdineDAO.readOrdiniUltimoGiorno();
 			
-			//System.out.println("========================================");
+			System.out.println("========================================");
 			
 	        if (ordini.isEmpty()) {
 	            System.out.println("Nessun ordine disponibile.");
 	        }
 	        
-	        //System.out.println("========================================");
+	        System.out.println("========================================");
 	        
 		} catch (DBConnectionException e) {
 			System.out.println("Errore di connessione al database: " + e.getMessage());
@@ -217,14 +217,7 @@ public class GestioneOrdini {
     public static void assegnaConsegna(int idOrdine, int idFattorino)
             throws OperationException, DAOException, DBConnectionException {
  
-        // Controlla se ordine e fattorino sono stati selezionati
-        /*if (ordineSelezionato == null) {
-            throw new OperationException("Nessun ordine selezionato.");
-        }
-        if (fattorinoSelezionato == null) {
-            throw new OperationException("Nessun fattorino selezionato.");
-        }*/
- 
+       
         // Richiama la funzione per creare la consegna
         boolean successo = ConsegnaDAO.creaConsegna(idOrdine, idFattorino, new Date(System.currentTimeMillis()));
  
@@ -236,25 +229,7 @@ public class GestioneOrdini {
         stampaScelteSelezionate(idOrdine, idFattorino);
     }
     
-    /* Metodi per salvare le scelte
-    private static EntityOrdine ordineSelezionato;
-    private static EntityFattorino fattorinoSelezionato;
- 
-    public static void setOrdineSelezionato(EntityOrdine ordine) {
-        ordineSelezionato = ordine;
-    }
- 
-    public static EntityOrdine getOrdineSelezionato() {
-        return ordineSelezionato;
-    }
- 
-    public static void setFattorinoSelezionato(EntityFattorino fattorino) {
-        fattorinoSelezionato = fattorino;
-    }
- 
-    public static EntityFattorino getFattorinoSelezionato() {
-        return fattorinoSelezionato;
-    }*/
+   
 
  
     private static void stampaScelteSelezionate(int idOrdine, int idFattorino) throws OperationException, DAOException, DBConnectionException {
@@ -281,27 +256,27 @@ public class GestioneOrdini {
  
         ArrayList<String> returnList = new ArrayList<>();
         returnList.add("0"); // Prezzo totale
-        returnList.add("null"); // Dettagli ordine temporaneo
+        returnList.add("null"); 
         returnList.add("0"); // ID ordine
  
         try {
-            // Controllo esistenza prodotto
+            
             prodotto = ProdottoDAO.readProdotto(idPescheria, idProdotto);
  
             if (prodotto == null) {
                 throw new OperationException("Prodotto non trovato");
             }
  
-            // Calcolo prezzo totale
+            
             prezzoTotale = calcolaPrezzo(prodotto.getPrezzo(), quantita);
             returnList.set(0, String.valueOf(prezzoTotale));
             
             
-            // Creazione ordine 
+             
             EntityOrdine nuovoOrdine = new EntityOrdine(
-            	    idRistorante,          // ID del ristorante (da aggiungere come parametro)
+            	    idRistorante,          
             	    idPescheria,
-            	    idProdotto, // Data corrente
+            	    idProdotto, 
             	    new Date(System.currentTimeMillis()),
             	    quantita,
             	    prezzoTotale
@@ -310,7 +285,7 @@ public class GestioneOrdini {
             // Salva l'ordine in stato "In trattativa" nel database
             OrdineDAO.createOrdine(nuovoOrdine);
 
-            // Aggiungi l'ID dell'ordine alla lista di ritorno
+            
             returnList.set(2, String.valueOf(nuovoOrdine.getIdOrdine()));
  
         } catch (DBConnectionException dbEx) {
@@ -328,14 +303,14 @@ public class GestioneOrdini {
     
     public void inviaOrdine(int idPescheria, int codProdotto, double quantita,int idOrdine,float prezzo) throws OperationException {
         try {
-            // Recupera la pescheria in base all'ID
+            
             EntityPescheria pescheria = PescheriaDAO.readPescheria(String.valueOf(idPescheria));
             EmailService emailService = new EmailService();
             if (pescheria == null) {
                 throw new OperationException("Pescheria non trovata con l'ID specificato.");
             }
 
-            // Recupera l'e-mail della pescheria
+            
             String emailPescheria = pescheria.getEmail();
             
             String oggetto = "Nuovo Ordine";
@@ -356,10 +331,10 @@ public class GestioneOrdini {
 
 	public void confermaOrdine(int idOrdine) throws OperationException {
 	    try {
-	        // Converte la stringa "Confermato" nel valore dell'enum EntityOrdine.StatoOrdine
+	        
 	        EntityOrdine.StatoOrdine statoConfermato = EntityOrdine.StatoOrdine.valueOf("CONFERMATO");
 	
-	        // Aggiorna lo stato dell'ordine a "Confermato"
+	        
 	        boolean statoAggiornato = OrdineDAO.updateStatoOrdine(idOrdine, statoConfermato);
 	        if (!statoAggiornato) {
 	            throw new OperationException("Errore durante l'aggiornamento dello stato dell'ordine.");
