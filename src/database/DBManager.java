@@ -12,10 +12,10 @@ public class DBManager {
 	public static Connection getConnection() throws SQLException {
 		
 		if(conn == null || conn.isClosed()) {
-			// URL pubblico Railway per JDBC MySQL
-			String url = "jdbc:mysql://mainline.proxy.rlwy.net:25471/railway?useSSL=false&allowPublicKeyRetrieval=true";
+			
+			String url = "jdbc:mysql://localhost:3306/progettox";
 			String username = "root";
-			String password = "QzPrYKWhlruHabkPdGBULMjsnvOeBAWn";
+			String password = ""; // XAMPP default = password vuota
 			
 			conn = DriverManager.getConnection(url, username, password);
 		}
