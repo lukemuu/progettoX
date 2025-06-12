@@ -57,8 +57,6 @@ public class BoundaryCooperativa {
 	
 
 	public static void assegnaConsegna() {
-	    // RIMUOVI questo scanner locale - usa solo quello statico
-	    // Scanner scanner = new Scanner(System.in);
 	
 	    try {
 	    	//Preleva i fattorini tramite il control, li salva in una lista e li stampa a video
@@ -77,7 +75,7 @@ public class BoundaryCooperativa {
 	        while (!inputValidoFattorino) {
 	            try {
 	                System.out.println("Inserisci l'ID del fattorino:");
-	                sceltaFattorino = Integer.parseInt(scan.nextLine()); // Usa scan statico
+	                sceltaFattorino = Integer.parseInt(scan.nextLine()); 
 
 	                if (sceltaFattorino > 0) {
 	                    inputValidoFattorino = true;
@@ -105,7 +103,7 @@ public class BoundaryCooperativa {
 	        while (!inputValidoOrdine) {
 	            try {
 	                System.out.println("Inserisci l'ID dell'ordine:");
-	                sceltaOrdine = Integer.parseInt(scan.nextLine()); // Usa scan statico
+	                sceltaOrdine = Integer.parseInt(scan.nextLine());
 
 	                if (sceltaOrdine > 0) {
 	                    inputValidoOrdine = true;
