@@ -92,7 +92,9 @@ public class AssegnaConsegneTest{
     		    System.setOut(originalOut);
     		}
     }
-
+    
+    
+    //TEST CASE 1 : Testa l'assegnazione di una consegna con input validi
     @Test
     public void testAssegnaConsegnaInputValidi() {
         // Simula input validi
@@ -119,7 +121,8 @@ public class AssegnaConsegneTest{
         }
     }
     
-
+    
+    //TEST CASE 2 : Testa l'assegnazione di una consegna con un ID fattorino non valido (carattere non numerico)
 	/*@Test
 	public void testAssegnaConsegnaIdFattorinoCarattereNonValido() {
 	    // Simula input non valido: carattere per ID fattorino
@@ -137,6 +140,8 @@ public class AssegnaConsegneTest{
 	               output.contains("Errore, inserire un ID valido (numero intero)."));
 	}
 	
+	
+	//TEST CASE 3 : Testa l'assegnazione di una consegna con ID fattorino negativo
 	@Test
 	public void testAssegnaConsegnaIdFattorinoNegativo() {
 	    // Simula input non valido: ID fattorino negativo
@@ -155,6 +160,7 @@ public class AssegnaConsegneTest{
 	}
 	
 
+    //TEST CASE 4 : Testa l'assegnazione di una consegna con un ID ordine non valido (carattere non numerico)
 	@Test
 	public void testAssegnaConsegnaIdOrdineCarattereNonValido() {
 	    // Simula input non valido: carattere per ID ordine
@@ -172,6 +178,8 @@ public class AssegnaConsegneTest{
 	               output.contains("Errore, inserire un ID valido (numero intero)."));
 	}
 	
+	
+	//TEST CASE 5 : Testa l'assegnazione di una consegna con ID ordine negativo
 	@Test
 	public void testAssegnaConsegnaIdOrdineNegativo() {
 	    // Simula input non valido: ID ordine negativo
@@ -188,8 +196,9 @@ public class AssegnaConsegneTest{
 	    assertTrue("L'output non contiene il messaggio di errore per ID ordine. Output ricevuto: " + output,
 	               output.contains("Errore, l'ID dell'ordine deve essere un numero positivo."));
 	}
-    
 
+
+    //TEST CASE 6 : Testa l'assegnazione di una consegna con fattorino non presente nel database
     @Test
     public void testStampaListaFattoriniNonDisponibili() {
         // Popola il database con fattorini non disponibili
@@ -215,6 +224,7 @@ public class AssegnaConsegneTest{
     }
     
 
+    //TEST CASE 7 : Testa l'assegnazione di una consegna con ordini non disponibili
     @Test
     public void testStampaListaOrdiniNonDisponibili() {
         // Popola il database con ordini non disponibili

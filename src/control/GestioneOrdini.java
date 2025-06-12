@@ -229,9 +229,7 @@ public class GestioneOrdini {
         stampaScelteSelezionate(idOrdine, idFattorino);
     }
     
-   
-
- 
+    
     private static void stampaScelteSelezionate(int idOrdine, int idFattorino) throws OperationException, DAOException, DBConnectionException {
         System.out.println("========================================");
         System.out.println("          Riepilogo Scelte Utente       ");

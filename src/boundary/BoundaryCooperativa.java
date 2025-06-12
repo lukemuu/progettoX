@@ -25,9 +25,7 @@ import database.ProdottoDAO;
 import entity.EntityPescheria;
 import entity.EntityProdotto;
 import exception.DBConnectionException;
- 
- 
- 
+
 public class BoundaryCooperativa {
  
 	static Scanner scan = new Scanner(System.in);
@@ -63,6 +61,7 @@ public class BoundaryCooperativa {
 	    // Scanner scanner = new Scanner(System.in);
 	
 	    try {
+	    	//Preleva i fattorini tramite il control, li salva in una lista e li stampa a video
 	        List<EntityFattorino> fattorini = GestioneOrdini.stampaListaFattorini();
 	
 	        System.out.println("Seleziona un fattorino dall'elenco:");
@@ -71,6 +70,7 @@ public class BoundaryCooperativa {
 	            System.out.println((i + 1) + ". Nome: " + fattorino.getNome() + ", ID Fattorino: " + fattorino.getIdFattorino());
 	        }
 	
+	        // Chiede all'utente di inserire l'ID del fattorino
 	        int sceltaFattorino = -1;
 	        boolean inputValidoFattorino = false;
 	        
@@ -89,6 +89,7 @@ public class BoundaryCooperativa {
 	            }
 	        }
 	        
+	        //Preleva gli ordini tramite il control, li salva in una lista e li stampa a video
 	        List<EntityOrdine> ordini = GestioneOrdini.stampaListaOrdini();
 	
 	        System.out.println("Seleziona un ordine dall'elenco:");
@@ -97,6 +98,7 @@ public class BoundaryCooperativa {
 	            System.out.println((i + 1) + ". ID Ordine: " + ordine.getIdOrdine() + ", Data: " + ordine.getData() + ", Quantità: " + ordine.getQta());
 	        }
 	        
+	        // Chiede all'utente di inserire l'ID dell'ordine
 	        boolean inputValidoOrdine = false;
 	        int sceltaOrdine = 0;
 
