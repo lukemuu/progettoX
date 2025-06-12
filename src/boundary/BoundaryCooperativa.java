@@ -129,7 +129,7 @@ public class BoundaryCooperativa {
 	    } catch (Exception e) {
 	        System.err.println("Errore imprevisto: " + e.getMessage());
 	    }
-	    // RIMUOVI il finally che chiude scanner
+	    
 	}
 }
  
